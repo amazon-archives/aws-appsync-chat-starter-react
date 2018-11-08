@@ -127,7 +127,7 @@ This is a Starter React Progressive Web Application (PWA) that uses AWS AppSync 
 
 ### Interacting with Chatbots
 
-(_The chatbots retrieve information online via API calls from Lambda to https://www.themoviedb.org/ (MovieBot) and https://api.chucknorris.io/ (ChuckBot)_)
+(_The chatbots retrieve information online via API calls from Lambda to https://www.themoviedb.org/ (MovieBot, which is based on https://github.com/aws-samples/aws-lex-convo-bot-example) and https://api.chucknorris.io/ (ChuckBot)_)
 
 1. In order to start or respond to a chatbot conversation, you need to start the message with either `@chuckbot` or `@moviebot` to trigger or respond to the specific bot, for example:
 
