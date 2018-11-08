@@ -14,7 +14,7 @@
         "fulfillmentActivity": {
           "type": "CodeHook",
           "codeHook": {
-            "uri": "arn:aws:lambda:us-west-2:244958302947:function:ChatQLReact-MovieBot-13YMHXQK7KPXB",
+            "uri": "<MovieBot Lambda ARN>",
             "messageVersion": "1.0"
           }
         },
