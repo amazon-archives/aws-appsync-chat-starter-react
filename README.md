@@ -153,9 +153,9 @@ This is a Starter React Progressive Web Application (PWA) that uses AWS AppSync 
 
 2. Build and publish the application:
 
-```bash
-    $ amplify publish
-```
+   ```bash
+       $ amplify publish
+   ```
 
 3. If you are deploying a CloudFront distribuiton, be mindful it needs to be replicated across all points of presence globally and it might take up to 15 minutes to do so.
 
