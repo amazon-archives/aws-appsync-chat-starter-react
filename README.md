@@ -2,16 +2,14 @@
 
 ### Quicklinks
 
-- [ChatQLv2: An AWS AppSync Chat Starter App written in React](#chatqlv2-an-aws-appsync-chat-starter-app-written-in-react)
-        - [Quicklinks](#quicklinks)
-    - [Introduction](#introduction)
-    - [Getting Started](#getting-started)
-            - [Prerequisites](#prerequisites)
-        - [Backend Setup](#backend-setup)
-        - [Interacting with Chatbots](#interacting-with-chatbots)
-        - [Interacting with other AWS AI Services](#interacting-with-other-aws-ai-services)
-    - [Building, Deploying and Publishing](#building-deploying-and-publishing)
-    - [Clean Up](#clean-up)
+- [ChatQLv2: An AWS AppSync Chat Starter App written in React]
+  - [Introduction](#introduction)
+  - [Getting Started](#getting-started) - [Prerequisites](#prerequisites)
+    - [Backend Setup](#backend-setup)
+    - [Interacting with Chatbots](#interacting-with-chatbots)
+    - [Interacting with other AWS AI Services](#interacting-with-other-aws-ai-services)
+  - [Building, Deploying and Publishing](#building-deploying-and-publishing)
+  - [Clean Up](#clean-up)
 
 ## Introduction
 
