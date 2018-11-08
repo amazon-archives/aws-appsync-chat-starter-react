@@ -1,0 +1,244 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+Description: ChatQL 
+Parameters:
+  s3Bucket:
+    Type: String
+    Description: S3 bucket associated with this project
+  appSyncAPI:
+    Type: String
+    Description: GraphQL API associated with this project
+Outputs:
+  ChatQLFunction:
+    Description: The GraphQL Lambda Data Source
+    Value: !GetAtt ChatQLAIProxy.Arn
+  ChuckBotFunction:
+    Description: ChuckBot Lex Chatbot Lambda
+    Value: !GetAtt ChuckBot.Arn
+  MovieBotFunction:
+    Description: MovieBot Lex Chatbot Lambda
+    Value: !GetAtt MovieBot.Arn
+Resources:
+  ChatQLAIProxy:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: ai-lambda/index.handler
+      Runtime: nodejs8.10
+      CodeUri: .
+      Description: ""
+      MemorySize: 1024
+      Timeout: 10
+      Policies:
+        - AmazonRekognitionReadOnlyAccess
+        - AmazonPollyReadOnlyAccess
+        - ComprehendReadOnly
+        - AWSLambdaBasicExecutionRole
+        - AmazonLexRunBotsOnly
+        - TranslateReadOnly
+        - S3CrudPolicy:
+            BucketName: !Ref s3Bucket
+  MovieBot:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: moviebot-lambda/index.handler
+      Runtime: nodejs8.10
+      CodeUri: .
+      Description: ""
+      MemorySize: 128
+      Timeout: 3
+  ChuckBot:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: chuckbot-lambda/index.lambda_handler
+      Runtime: nodejs8.10
+      CodeUri: .
+      Description: ''
+      MemorySize: 128
+      Timeout: 3
+  awsAppSyncServiceRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Principal:
+              Service:
+                - "appsync.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      Path: "/"
+  lambdaAccessPolicy:
+    Type: "AWS::IAM::Policy"
+    Properties:
+      PolicyName: "lambda-access"
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Action: "lambda:InvokeFunction"
+            Resource:
+              - !GetAtt ChatQLAIProxy.Arn
+      Roles:
+        -
+          Ref: "awsAppSyncServiceRole"
+  ChatQLAIProxyDataSource:
+    Type: "AWS::AppSync::DataSource"
+    Properties:
+      ApiId: !Ref appSyncAPI
+      Name: "AIproxy"
+      Description: "AIproxy Lambda data source"
+      Type: "AWS_LAMBDA"
+      ServiceRoleArn: !GetAtt awsAppSyncServiceRole.Arn
+      LambdaConfig:
+        LambdaFunctionArn: !GetAtt ChatQLAIProxy.Arn
+  queryDetectLabelsResolver:
+    Type: "AWS::AppSync::Resolver"
+    Properties:
+      ApiId: !Ref appSyncAPI
+      TypeName: "Query"
+      FieldName: "detectLabels"
+      DataSourceName: !GetAtt ChatQLAIProxyDataSource.Name
+      RequestMappingTemplate: |
+        {
+            "version" : "2017-02-28",
+            "operation": "Invoke",
+            "payload": {
+                "field": "rekognition-labels",
+                "arguments":  $utils.toJson($context.args)
+            }
+        }
+      ResponseMappingTemplate: |
+        $util.toJson($context.result)
+  queryDetectCelebsResolver:
+    Type: "AWS::AppSync::Resolver"
+    Properties:
+      ApiId: !Ref appSyncAPI
+      TypeName: "Query"
+      FieldName: "detectCelebs"
+      DataSourceName: !GetAtt ChatQLAIProxyDataSource.Name
+      RequestMappingTemplate: |
+        {
+            "version" : "2017-02-28",
+            "operation": "Invoke",
+            "payload": {
+                "field": "rekognition-celebs",
+                "arguments":  $utils.toJson($context.args)
+            }
+        }
+      ResponseMappingTemplate: |
+        $util.toJson($context.result)
+  queryInvokeBotResolver:
+    Type: "AWS::AppSync::Resolver"
+    Properties:
+      ApiId: !Ref appSyncAPI
+      TypeName: "Query"
+      FieldName: "invokeBot"
+      DataSourceName: !GetAtt ChatQLAIProxyDataSource.Name
+      RequestMappingTemplate: |
+        {
+            "version" : "2017-02-28",
+            "operation": "Invoke",
+            "payload": {
+                "field": "lex",
+                "arguments":  {
+                  "bot": "$context.arguments.bot",
+                    "sender": "$context.identity.sub",
+                    "text": "$context.arguments.text"
+                }
+            }
+        }
+      ResponseMappingTemplate: |
+        $util.toJson($context.result)
+  queryDictateResolver:
+    Type: "AWS::AppSync::Resolver"
+    Properties:
+      ApiId: !Ref appSyncAPI
+      TypeName: "Query"
+      FieldName: "dictate"
+      DataSourceName: !GetAtt ChatQLAIProxyDataSource.Name
+      RequestMappingTemplate: |
+        {
+            "version" : "2017-02-28",
+            "operation": "Invoke",
+            "payload": {
+                "field": "polly",
+                "arguments":  $utils.toJson($context.args)
+            }
+        }
+      ResponseMappingTemplate: |
+        $util.toJson($context.result)
+  queryTranslateResolver:
+    Type: "AWS::AppSync::Resolver"
+    Properties:
+      ApiId: !Ref appSyncAPI
+      TypeName: "Query"
+      FieldName: "translate"
+      DataSourceName: !GetAtt ChatQLAIProxyDataSource.Name
+      RequestMappingTemplate: |
+        {
+            "version" : "2017-02-28",
+            "operation": "Invoke",
+            "payload": {
+                "field": "translate",
+                "arguments":  $utils.toJson($context.args)
+            }
+        }
+      ResponseMappingTemplate: |
+        $util.toJson($context.result)
+  queryDetectLanguageResolver:
+    Type: "AWS::AppSync::Resolver"
+    Properties:
+      ApiId: !Ref appSyncAPI
+      TypeName: "Query"
+      FieldName: "detectLanguage"
+      DataSourceName: !GetAtt ChatQLAIProxyDataSource.Name
+      RequestMappingTemplate: |
+        {
+            "version" : "2017-02-28",
+            "operation": "Invoke",
+            "payload": {
+                "field": "comprehend-language",
+                "arguments":  $utils.toJson($context.args)
+            }
+        }
+      ResponseMappingTemplate: |
+        $util.toJson($context.result)
+  queryDetectEntitiesResolver:
+    Type: "AWS::AppSync::Resolver"
+    Properties:
+      ApiId: !Ref appSyncAPI
+      TypeName: "Query"
+      FieldName: "detectEntities"
+      DataSourceName: !GetAtt ChatQLAIProxyDataSource.Name
+      RequestMappingTemplate: |
+        {
+            "version" : "2017-02-28",
+            "operation": "Invoke",
+            "payload": {
+                "field": "comprehend-entities",
+                "arguments":  $utils.toJson($context.args)
+            }
+        }
+      ResponseMappingTemplate: |
+        $util.toJson($context.result)
+  queryDetectSentimentResolver:
+    Type: "AWS::AppSync::Resolver"
+    Properties:
+      ApiId: !Ref appSyncAPI
+      TypeName: "Query"
+      FieldName: "detectSentiment"
+      DataSourceName: !GetAtt ChatQLAIProxyDataSource.Name
+      RequestMappingTemplate: |
+        {
+            "version" : "2017-02-28",
+            "operation": "Invoke",
+            "payload": {
+                "field": "comprehend-sentiment",
+                "arguments":  $utils.toJson($context.args)
+            }
+        }
+      ResponseMappingTemplate: |
+        $util.toJson($context.result)
