@@ -1,0 +1,48 @@
+{
+  "name": "FactTypes",
+  "description": "Available Chuck Norris Facts",
+  "createVersion": true,
+  "enumerationValues": [
+    {
+      "value": "Travel",
+      "synonyms": []
+    },
+    {
+      "value": "Money",
+      "synonyms": []
+    },
+    {
+      "value": "Software Development",
+      "synonyms": []
+    },
+    {
+      "value": "Celebrities",
+      "synonyms": []
+    },
+    {
+      "value": "Music",
+      "synonyms": []
+    },
+    {
+      "value": "Science",
+      "synonyms": []
+    },
+    {
+      "value": "Movies",
+      "synonyms": []
+    },
+    {
+      "value": "History",
+      "synonyms": []
+    },
+    {
+      "value": "Career",
+      "synonyms": []
+    },
+    {
+      "value": "Food",
+      "synonyms": []
+    }
+  ],
+  "valueSelectionStrategy": "ORIGINAL_VALUE"
+}

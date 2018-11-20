@@ -1,0 +1,32 @@
+{
+  "name": "ChuckBot",
+  "intents": [
+    {
+      "intentName": "ChuckNorrisFacts",
+      "intentVersion": "1"
+    }
+  ],
+  "clarificationPrompt": {
+    "messages": [
+      {
+        "contentType": "PlainText",
+        "content": "Please try something like: \\[@chuckbot Give me a Chuck Norris fact\\]"
+      }
+    ],
+    "maxAttempts": 2
+  },
+  "abortStatement": {
+    "messages": [
+      {
+        "contentType": "PlainText",
+        "content": "Sorry, I am not able to assist at this time"
+      }
+    ]
+  },
+  "processBehavior": "BUILD",
+  "voiceId": "Matthew",
+  "childDirected": false,
+  "locale": "en-US",
+  "idleSessionTTLInSeconds": 300,
+  "createVersion": true
+}

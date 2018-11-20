@@ -1,0 +1,63 @@
+{
+  "name": "Movies",
+  "createVersion": true,
+  "fulfillmentActivity": {
+    "type": "CodeHook",
+    "codeHook": {
+      "uri": "<LAMBDA_ARN>",
+      "messageVersion": "1.0"
+    }
+  },
+  "sampleUtterances": [
+    "Tell me about a movie",
+    "Tell me about {name}",
+    "Tell me {summary} about {name}",
+    "{name}",
+    "{name} {summary}"
+  ],
+  "slots": [
+    {
+      "name": "name",
+      "slotConstraint": "Required",
+      "slotType": "AMAZON.Movie",
+      "valueElicitationPrompt": {
+        "messages": [
+          {
+            "contentType": "PlainText",
+            "content": "What movie do you want to know about?"
+          }
+        ],
+        "maxAttempts": 2
+      },
+      "priority": 1,
+      "sampleUtterances": []
+    },
+    {
+      "name": "summary",
+      "slotConstraint": "Optional",
+      "slotType": "MovieDetails",
+      "slotTypeVersion": "1",
+      "valueElicitationPrompt": {
+        "messages": [
+          {
+            "contentType": "PlainText",
+            "content": "What information are you looking for? (Year, Plot, All)"
+          }
+        ],
+        "maxAttempts": 2,
+        "responseCard": "{\"version\":1,\"contentType\":\"application/vnd.amazonaws.card.generic\",\"genericAttachments\":[]}"
+      },
+      "priority": 2,
+      "sampleUtterances": []
+    }
+  ],
+  "conclusionStatement": {
+    "messages": [
+      {
+        "contentType": "PlainText",
+        "content": "Hope that was useful! Click the link to view more info on IMDB. For another movie, just type \\&quot;\\@moviebot \\&lt;Movie Name\\&gt;\\&quot; or send a movie name and click on my name in the dropdown",
+        "groupNumber": 1
+      }
+    ]
+  }
+}

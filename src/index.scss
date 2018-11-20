@@ -1,0 +1,147 @@
+$blue: #00b9f2;
+$indigo: #007eb9;
+$purple: #527fff;
+// $pink:
+$red: #dd3f5b;
+$orange: #ff9900;
+// $yellow:
+// $green:
+$teal: #04ace0;
+$cyan: #28c3f3;
+$white: #ffffff;
+$gray-400: #e6e6e6;
+$gray-600: #bbbbbb;
+$gray-800: #828282;
+
+$primary: $orange;
+$secondary: #bbbbbb; //custom
+$success: #10dc60;
+$info: $cyan; //custom
+$warning: #ffce00;
+$danger: #f53d3d;
+$light: #f4f4f4;
+$dark: #222222;
+
+$theme-colors: (
+  "squidink": #31465f,
+  "bbb": #bbb,
+  "lightsquid": #55677d,
+  "ligthergray": #e6e6e6
+);
+
+$font-family-sans-serif: Amazon Ember, -apple-system, BlinkMacSystemFont,
+  "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
+  "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
+
+@import "bootstrap/scss/bootstrap";
+
+html,
+body {
+  height: 100%;
+}
+
+.scrollable {
+  height: 250px;
+  overflow-y: scroll;
+}
+
+.highlight img:hover {
+  opacity: 0.5;
+  background-color: #152939;
+  border: 1px solid #152939;
+}
+
+.bg-ember {
+  background-color: #ffac31 !important;
+}
+
+.bg-blue {
+  background-color: #007eb9 !important;
+}
+
+.bg-ampligygray {
+  background-color: #bbbbbb !important;
+}
+
+.text-squidink {
+  color: #55677d !important;
+}
+
+.text-blue {
+  color: #04ace0 !important;
+}
+
+@keyframes quiet {
+  25% {
+    transform: scaleY(0.6);
+  }
+  50% {
+    transform: scaleY(0.4);
+  }
+  75% {
+    transform: scaleY(0.8);
+  }
+}
+
+@keyframes normal {
+  25% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.4);
+  }
+  75% {
+    transform: scaleY(0.6);
+  }
+}
+@keyframes loud {
+  25% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.4);
+  }
+  75% {
+    transform: scaleY(1.2);
+  }
+}
+
+.boxContainer {
+  display: flex;
+  justify-content: space-between;
+  height: 64px;
+  --boxSize: 8px;
+  --gutter: 4px;
+  width: calc((var(--boxSize) + var(--gutter)) * 5);
+}
+
+.box {
+  transform: scaleY(0.4);
+  height: 100%;
+  width: var(--boxSize);
+  background: #ff9900;
+  animation-duration: 1.2s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  border-radius: 8px;
+}
+
+.box1 {
+  animation-name: quiet;
+}
+
+.box2 {
+  animation-name: normal;
+}
+
+.box3 {
+  animation-name: quiet;
+}
+
+.box4 {
+  animation-name: loud;
+}
+
+.box5 {
+  animation-name: quiet;
+}

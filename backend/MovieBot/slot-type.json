@@ -1,0 +1,28 @@
+{
+  "name": "MovieDetails",
+  "description": "Movie Details",
+  "createVersion": true,
+  "enumerationValues": [
+    {
+      "value": "Year",
+      "synonyms": []
+    },
+    {
+      "value": "Voting",
+      "synonyms": []
+    },
+    {
+      "value": "Plot",
+      "synonyms": []
+    },
+    {
+      "value": "Director",
+      "synonyms": []
+    },
+    {
+      "value": "Actors",
+      "synonyms": []
+    }
+  ],
+  "valueSelectionStrategy": "ORIGINAL_VALUE"
+}

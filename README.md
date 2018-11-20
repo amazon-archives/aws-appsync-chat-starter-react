@@ -1,8 +1,8 @@
 # ChatQLv2: An AWS AppSync Chat Starter App written in React
 
-### Quicklinks
+## Quicklinks
 
-- [ChatQLv2: An AWS AppSync Chat Starter App written in React]
+- [ChatQLv2: An AWS AppSync Chat Starter App written in React](#chatqlv2-an-aws-appsync-chat-starter-app-written-in-react) - [Quicklinks](#quicklinks)
   - [Introduction](#introduction)
   - [Getting Started](#getting-started) - [Prerequisites](#prerequisites)
     - [Backend Setup](#backend-setup)
@@ -19,7 +19,7 @@ This is a Starter React Progressive Web Application (PWA) that uses AWS AppSync 
 
 ## Getting Started
 
-#### Prerequisites
+### Prerequisites
 
 - [AWS Account](https://aws.amazon.com/mobile/details) with appropriate permissions to create the related resources
 - [NodeJS](https://nodejs.org/en/download/) with [NPM](https://docs.npmjs.com/getting-started/installing-node)
@@ -27,107 +27,144 @@ This is a Starter React Progressive Web Application (PWA) that uses AWS AppSync 
 - [AWS Amplify CLI](https://github.com/aws-amplify/amplify-cli) (configured for a region where [AWS AppSync](https://docs.aws.amazon.com/general/latest/gr/rande.html) and all other services in use are available) `(npm install -g @aws-amplify/cli)`
 - [AWS SAM CLI](https://github.com/awslabs/aws-sam-cli) `(pip install --user aws-sam-cli)`
 - [Create React App](https://github.com/facebook/create-react-app) `(npm install -g create-react-app)`
+- [Install JQ](https://stedolan.github.io/jq/)
+- If using Windows, you'll need the [Windows Subsystem for Linux (WSL)](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
 
 ### Backend Setup
+
+Note: This solution uses Amazon Lex. The service is only supported in us-east-1, us-west-2 and eu-west-1. We recommending launching this entire solution in one of these regions.
 
 1. First, clone this repository and navigate to the created folder:
 
    ```bash
-   $ git clone https://github.com/aws-samples/aws-appsync-chat-starter-react.git
-   $ cd aws-appsync-chat-starter-react
+   git clone https://github.com/aws-samples/aws-appsync-chat-starter-react.git
+   cd aws-appsync-chat-starter-react
    ```
 
-2. Set up your AWS resources the Amplify CLI:
+2. Install the required modules:
 
    ```bash
-   $ amplify init
+   npm install
    ```
 
-3. Install the required modules:
+3. Init the directory as an amplify **Javascript** app using the **React** framework:
 
    ```bash
-   $ npm install
+   amplify init
    ```
 
-4. Add an AppSync GraphQL API with Amazon Cognito for the API Authentication. Follow the default options and, when prompted to edit the GraphQL schema in your editor of choice, paste the contents of the file `backend\schema.graphql` to it :
+   Set the region we are deploying resources to
 
    ```bash
-   $ amplify add api
+   export AWS_REGION=$(jq -r '.providers.awscloudformation.Region' amplify/#current-cloud-backend/amplify-meta.json)
+   echo $AWS_REGION
    ```
 
-5. Add S3 Private Storage to the project with the default options (make sure to select private read/write S3 access for authenticate users):
+4. Add an **Amazon Cognito User Pool** auth resource. Use the default configuration.
 
    ```bash
-   $ amplify add storage
+   amplify add auth
    ```
 
-6. Create the cloud resources by pushing the changes:
+5. Add an **AppSync GraphQL** API with **Amazon Cognito User Pool** for the API Authentication. Follow the default options. When prompted with "_Do you have an annotated GraphQL schema?_", select "Yes" and provide the schema file path `backend/schema.graphql`
 
    ```bash
-   $ amplify push
+   amplify add api
    ```
 
-7. In `./src/aws-exports.js`, look up the S3 bucket name created for user storage:
+6. Add S3 Private Storage for **Content** to the project with the default options. Select private **read/write** access for **Auth users only**:
 
    ```bash
-   $ grep aws_user_files_s3_bucket src/aws-exports.js
+   amplify add storage
    ```
 
-8. Navigate to the AWS AppSync console (http://console.aws.amazon.com/appsync/home), open the newly created API, click SETTINGS and retrieve the API ID
-
-9. Create an S3 bucket in the same region as all the other resources. It'll be used for the SAM packaging and deployment
+7. Provisions your cloud resources with the latest local developments. When asked to generate code, answer "NO".
 
    ```bash
-   $ aws s3 mb s3://bucket-name --region <region-name>
+   amplify push
    ```
 
-10. Now we need to deploy 3 Lambda functions (one for AppSync and two for Lex) and configure the AppSync Resolvers that use Lambda accordingly. Use the following command to package the deployment files and upload them to the S3 bucket created on the last step:
+   Wait for the provisioning to complete. Once done, a `src/aws-exports.js` file with your resource information is created.
+
+8. Look up the S3 bucket name created for user storage:
+
+   ```bash
+   export USER_FILES_BUCKET=$(sed -n 's/.*"aws_user_files_s3_bucket": "\(.*\)".*/\1/p' src/aws-exports.js)
+   echo $USER_FILES_BUCKET
+   ```
+
+9. Retrieve the API ID of your AppSync GraphQL endpoint
+
+   ```bash
+   export GRAPHQL_API_ID=$(jq -r '.api[(.api | keys)[0]].output.GraphQLAPIIdOutput' ./amplify/#current-cloud-backend/amplify-meta.json)
+   echo $GRAPHQL_API_ID
+   ```
+
+10. Retrieve the project's deployment bucket and stackname . It will be used for packaging and deployment with SAM
 
     ```bash
-    $ sam package --template-file file://backend/deploy.yaml --s3-bucket bucket-name --output-template-file packaged.yaml
+    export DEPLOYMENT_BUCKET_NAME=$(jq -r '.providers.awscloudformation.DeploymentBucketName' ./amplify/#current-cloud-backend/amplify-meta.json)
+    export STACK_NAME=$(jq -r '.providers.awscloudformation.StackName' ./amplify/#current-cloud-backend/amplify-meta.json)
+    echo $DEPLOYMENT_BUCKET_NAME
+    echo $STACK_NAME
     ```
 
-11. Using the S3 bucket details retrieved on step 7 and the API ID retrieved on step 8, deploy the template. It'll generate the Lambda functions used to connect to the AI Application Services and Lex Chatbots as well as setup permissions:
+11. Now we need to deploy 3 Lambda functions (one for AppSync and two for Lex) and configure the AppSync Resolvers that use Lambda accordingly. First, we install the npm dependencies of for each lambda function. We then package and deploy the changes with SAM.
 
     ```bash
-    $ sam deploy --template-file ./packaged.yaml --stack-name ChatQLReact --capabilities CAPABILITY_IAM --parameter-overrides appSyncAPI=<API_ID_FROM_APPSYNC_CONSOLE> s3Bucket=<S3_BUCKET_FROM_AWS_EXPORTS> --region <region-name>
+    cd ./backend/chuckbot-lambda; npm install; cd ../..
+    cd ./backend/moviebot-lambda; npm install; cd ../..
+    cd ./backend/ai-lambda; npm install; cd ../..
+    sam package --template-file ./backend/deploy.yaml --s3-bucket $DEPLOYMENT_BUCKET_NAME --output-template-file packaged.yaml
+    export STACK_NAME_AIML="$STACK_NAME-extra-aiml"
+    sam deploy --template-file ./packaged.yaml --stack-name $STACK_NAME_AIML --capabilities CAPABILITY_IAM --parameter-overrides appSyncAPI=$GRAPHQL_API_ID s3Bucket=$USER_FILES_BUCKET --region $AWS_REGION
     ```
 
-    When the stack is done deploying, you can view its output. Make note of the Lambda ARNs.
+    Wait for the stack to finish deploying; then retrieve the functions' ARN
 
     ```bash
-    $ aws cloudformation describe-stacks --stack-name ChatQLReact --query Stacks[0].Outputs --region <region-name>
+    export CHUCKBOT_FUNCTION_ARN=$(aws cloudformation describe-stacks --stack-name  $STACK_NAME_AIML --query Stacks[0].Outputs --region $AWS_REGION | jq -r '.[] | select(.OutputKey == "ChuckBotFunction") | .OutputValue')
+    export MOVIEBOT_FUNCTION_ARN=$(aws cloudformation describe-stacks --stack-name  $STACK_NAME_AIML --query Stacks[0].Outputs --region $AWS_REGION | jq -r '.[] | select(.OutputKey == "MovieBotFunction") | .OutputValue')
+    echo $CHUCKBOT_FUNCTION_ARN
+    echo $MOVIEBOT_FUNCTION_ARN
     ```
 
-12. Edit the files `backend/MovieBot.json` and `backend/ChuckBot.json` on line 17 ("uri") to add the Lambda ARNs accordingly (MovieBotFunction and ChuckBotFunction from the last command)
-
-13. Create 2 different zip files containing the JSON files above on each
-14. Execute the following commands to add permissions so Lex can invoke the functions:
+12. Let's set up Lex. We will create 2 chatbots: ChuckBot and MovieBot. Execute the following commands to add permissions so Lex can invoke the functions:
 
     ```bash
-    $ aws lambda add-permission --statement-id Lex --function-name <MovieBot Lambda ARN> --action lambda:\* --principal lex.amazonaws.com --region <region-name>
-    $ aws lambda add-permission --statement-id Lex --function-name <ChuckBot Lambda ARN> --action lambda:\* --principal lex.amazonaws.com --region <region-name>
+    aws lambda add-permission --statement-id Lex --function-name $CHUCKBOT_FUNCTION_ARN --action lambda:\* --principal lex.amazonaws.com --region $AWS_REGION
+    aws lambda add-permission --statement-id Lex --function-name $MOVIEBOT_FUNCTION_ARN --action lambda:\* --principal lex.amazonaws.com --region $AWS_REGION
     ```
 
-15. Go to the Lex Console ((http://console.aws.amazon.com/lex/home), under "Bots" select ACTIONS -> IMPORT and upload both zip files you generated on step 13. After that you'll have 2 chatbots: ChuckBot and MovieBot
-16. Access each bot separately and click the BUILD button
-17. Finally, execute the following command to install your project package dependencies and run the application locally:
+    Update the bots intents with the Lambda ARN:
 
     ```bash
-    $ amplify serve
+    jq '.fulfillmentActivity.codeHook.uri = $arn' --arg arn $CHUCKBOT_FUNCTION_ARN backend/ChuckBot/intent.json -M > tmp.txt ; cp tmp.txt backend/ChuckBot/intent.json; rm tmp.txt
+    jq '.fulfillmentActivity.codeHook.uri = $arn' --arg arn $MOVIEBOT_FUNCTION_ARN backend/MovieBot/intent.json -M > tmp.txt ; cp tmp.txt backend/MovieBot/intent.json; rm tmp.txt
     ```
 
-    or
+    And, deploy the slot types, intents and bots.
 
     ```bash
-    $ npm start
+    aws lex-models put-slot-type --cli-input-json file://backend/ChuckBot/slot-type.json --region $AWS_REGION
+    aws lex-models put-intent --cli-input-json file://backend/ChuckBot/intent.json --region $AWS_REGION
+    aws lex-models put-bot --cli-input-json file://backend/ChuckBot/bot.json --region $AWS_REGION
+    aws lex-models put-slot-type --cli-input-json file://backend/MovieBot/slot-type.json --region $AWS_REGION
+    aws lex-models put-intent --cli-input-json file://backend/MovieBot/intent.json --region $AWS_REGION
+    aws lex-models put-bot --cli-input-json file://backend/MovieBot/bot.json --region $AWS_REGION
     ```
 
-18. Access your ChatQLv2 app at http://localhost:3000. Sign up different users and test real-time/offline messaging using different browsers.
+13. Finally, execute the following command to install your project package dependencies and run the application locally:
+
+    ```bash
+    amplify serve
+    ```
+
+14. Access your ChatQLv2 app at http://localhost:3000. Sign up different users and test real-time/offline messaging using different browsers.
 
 ### Interacting with Chatbots
 
-(_The chatbots retrieve information online via API calls from Lambda to https://www.themoviedb.org/ (MovieBot, which is based on https://github.com/aws-samples/aws-lex-convo-bot-example) and https://api.chucknorris.io/ (ChuckBot)_)
+_The chatbots retrieve information online via API calls from Lambda to [The Movie Database (TMDb)](https://www.themoviedb.org/) (MovieBot, which is based on this [chatbot sample](https://github.com/aws-samples/aws-lex-convo-bot-example)) and [chucknorris.io ](https://api.chucknorris.io/) (ChuckBot)_
 
 1. In order to start or respond to a chatbot conversation, you need to start the message with either `@chuckbot` or `@moviebot` to trigger or respond to the specific bot, for example:
 
@@ -138,7 +175,7 @@ This is a Starter React Progressive Web Application (PWA) that uses AWS AppSync 
 3. Alternatively you can start a chatbot conversation from the message drop-down menu:
 
    - Just selecting `ChuckBot` will display options for further interaction
-   - Send a message with a movie name and selecting `MovieBot` subsequently will retrieve te details about the movie
+   - Send a message with a nothing but a movie name and selecting `MovieBot` subsequently will retrieve the details about the movie
 
 ### Interacting with other AWS AI Services
 
@@ -154,7 +191,7 @@ This is a Starter React Progressive Web Application (PWA) that uses AWS AppSync 
 2. Build and publish the application:
 
    ```bash
-       $ amplify publish
+   amplify publish
    ```
 
 3. If you are deploying a CloudFront distribuiton, be mindful it needs to be replicated across all points of presence globally and it might take up to 15 minutes to do so.
@@ -166,11 +203,11 @@ This is a Starter React Progressive Web Application (PWA) that uses AWS AppSync 
 To clean up the project, you can simply delete the stack you created or use the Amplify CLI, depending on how you deployed the application.
 
 ```bash
-$ aws cloudformation delete-stack --stack-name ChatQLReact --region <region-name>
+aws cloudformation delete-stack --stack-name $STACK_NAME_AIML --region $AWS_REGION
 ```
 
 and use:
 
-```
-$ amplify delete
+```bash
+amplify delete
 ```

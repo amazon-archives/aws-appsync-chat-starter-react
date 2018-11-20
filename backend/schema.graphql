@@ -1,7 +1,7 @@
 type Conversation
   @model(
     mutations: { create: "createConvo" }
-    queries: null
+    queries: { get: "getConvo" }
     subscriptions: null
   ) {
   id: ID!
@@ -15,11 +15,16 @@ type Conversation
 type Message
   @searchable
   @auth(rules: [{ allow: owner, identityField: "sub", mutations: [create] }])
-  @model(mutations: { create: "createMessage" }, queries: null) {
+  @model(
+    mutations: { create: "createMessage" }
+    queries: null
+    subscriptions: null
+  ) {
   id: ID!
   content: String
   createdAt: String
   owner: String
+  chatbot: Boolean
   # Flag denoting if this message has been accepted by the server or not.
   isSent: Boolean
   file: S3Object
@@ -37,7 +42,11 @@ type S3Object {
 type User
   @searchable
   @auth(rules: [{ allow: owner, identityField: "sub" }])
-  @model(mutations: { create: "registerUser" }, queries: { get: "getUser" }) {
+  @model(
+    mutations: { create: "registerUser" }
+    queries: { get: "getUser" }
+    subscriptions: null
+  ) {
   id: ID!
   username: String!
   # is the user registered?
@@ -71,8 +80,8 @@ type AI {
   response: AWSJSON
 }
 
-type subscription {
-  onCreateMessage(messageConversationId: String!): Message
+type Subscription {
+  onCreateMessage(messageConversationId: ID!): Message
     @aws_subscribe(mutations: ["createMessage"])
   onUpdateConvoLink(convoLinkUserId: ID, status: String): ConvoLink
     @aws_subscribe(mutations: ["updateConvoLink"])

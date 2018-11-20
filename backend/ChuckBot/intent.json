@@ -1,0 +1,44 @@
+{
+  "name": "ChuckNorrisFacts",
+  "createVersion": true,
+  "fulfillmentActivity": {
+    "type": "CodeHook",
+    "codeHook": {
+      "uri": "<LAMBDA_ARN>",
+      "messageVersion": "1.0"
+    }
+  },
+  "sampleUtterances": [
+    "Give me a Chuck Norris fact",
+    "Give me a Chuck Norris {FactType} fact"
+  ],
+  "slots": [
+    {
+      "name": "FactType",
+      "slotConstraint": "Required",
+      "slotType": "FactTypes",
+      "slotTypeVersion": "1",
+      "valueElicitationPrompt": {
+        "messages": [
+          {
+            "contentType": "PlainText",
+            "content": "What kind of fact? (Software Development, Movies, Science, Music or Food)"
+          }
+        ],
+        "maxAttempts": 2,
+        "responseCard": "{\"version\":1,\"contentType\":\"application/vnd.amazonaws.card.generic\",\"genericAttachments\":[{\"imageUrl\":\"https://i.imgflip.com/1octba.jpg\",\"subTitle\":\"Choose the category:\",\"title\":\"Chuck Norris Facts\",\"buttons\":[{\"text\":\"Software Development\",\"value\":\"Software Development\"},{\"text\":\"Science\",\"value\":\"Science\"},{\"text\":\"Movies\",\"value\":\"Movies\"},{\"text\":\"Music\",\"value\":\"Music\"},{\"text\":\"Food\",\"value\":\"Food\"}]}]}"
+      },
+      "priority": 1,
+      "sampleUtterances": []
+    }
+  ],
+  "conclusionStatement": {
+    "messages": [
+      {
+        "contentType": "PlainText",
+        "content": "For more facts, just click on my name in the dropdown.",
+        "groupNumber": 1
+      }
+    ]
+  }
+}
