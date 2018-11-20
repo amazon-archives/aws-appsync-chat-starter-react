@@ -160,7 +160,7 @@ Note: This solution uses Amazon Lex. The service is only supported in us-east-1,
     amplify serve
     ```
 
-14. Access your ChatQLv2 app at http://localhost:3000. Sign up different users and test real-time/offline messaging using different browsers.
+14. Access your ChatQLv2 app at http://localhost:3000. Sign up at least 2 different users, authenticate with each user to get them registered in the backend, then search for new users to start a conversation to test real-time/offline messaging as well as other features using different devices or browsers.
 
 ### Interacting with Chatbots
 
