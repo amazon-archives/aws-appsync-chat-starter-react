@@ -5,15 +5,15 @@ import comprehend from '../../images/comprehend.png'
 import detectSentiment from '../../graphql/queries/detectSentiment'
 
 const score = val => Number.parseFloat(val * 100).toFixed(2) + '%'
-const getEmoji = sentiment => {
+const getEmoji = Sentiment => {
   let emoji = <i className="fas fa-meh" />
-  if (sentiment === 'POSITIVE') {
+  if (Sentiment === 'POSITIVE') {
     emoji = <i className="fas fa-smile" />
-  } else if (sentiment === 'NEGATIVE') {
+  } else if (Sentiment === 'NEGATIVE') {
     emoji = <i className="fas fa-frown" />
-  } else if (sentiment === 'NEUTRAL') {
+  } else if (Sentiment === 'NEUTRAL') {
     emoji = <i className="fas fa-meh" />
-  } else if (sentiment === 'MIXED') {
+  } else if (Sentiment === 'MIXED') {
     emoji = <i className="fas fa-grimace" />
   }
   return emoji
@@ -41,7 +41,7 @@ function DetectSentiment({ data: { loading, error, detectSentiment } }) {
   }
 
   const response = JSON.parse(detectSentiment.response)
-  const { sentiment, SentimentScore: scores } = response
+  const { Sentiment, SentimentScore: scores } = response
 
   return (
     <div>
