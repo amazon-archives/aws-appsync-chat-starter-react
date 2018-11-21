@@ -2,9 +2,11 @@
 
 ## Quicklinks
 
-- [ChatQLv2: An AWS AppSync Chat Starter App written in React](#chatqlv2-an-aws-appsync-chat-starter-app-written-in-react) - [Quicklinks](#quicklinks)
+- [ChatQLv2: An AWS AppSync Chat Starter App written in React](#chatqlv2-an-aws-appsync-chat-starter-app-written-in-react)
+  - [Quicklinks](#quicklinks)
   - [Introduction](#introduction)
-  - [Getting Started](#getting-started) - [Prerequisites](#prerequisites)
+  - [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
     - [Backend Setup](#backend-setup)
     - [Interacting with Chatbots](#interacting-with-chatbots)
     - [Interacting with other AWS AI Services](#interacting-with-other-aws-ai-services)
@@ -16,8 +18,8 @@
 in conjunction with This is a Starter React Progressive Web Application (PWA) that uses AWS AppSync to implement offline and real-time capabilities in a chat application with AI/ML features such as image recognition, text-to-speech, language translation, sentiment analysis as well as conversational chatbots. In the chat app, users can search for users and messages, have conversations with other users, upload images and exchange messages. The application demonstrates GraphQL Mutations, Queries and Subscriptions with AWS AppSync integrating with other AWS Services:
 
 - Amazon Cognito for user management as well as AuthN/Z
-- Amazon DynamoDB with 4x NoSQL Data Sources
-- Amazon Elasticsearch for full text search on messages and users
+- Amazon DynamoDB with 4x NoSQL Data Sources (Users, Messages, Conversations, ConvoLink)
+- Amazon Elasticsearch Data Source for full text search on messages and users
 - AWS Lambda as a Serverless Data Source connecting to AI Services
 - Amazon Comprehend for sentiment and entity analysis as well as language detection
 - Amazon Rekognition for object, scene and celebrity detection on images
@@ -173,7 +175,7 @@ Note: This solution uses Amazon Lex. The service is only supported in us-east-1,
     amplify serve
     ```
 
-14. Access your ChatQLv2 app at http://localhost:3000. Sign up at least 2 different users, authenticate with each user to get them registered in the backend, then search for new users to start a conversation to test real-time/offline messaging as well as other features using different devices or browsers.
+14. Access your ChatQLv2 app at http://localhost:3000. Sign up at least 2 different users, authenticate with each user to get them registered in the backend (Users Table), then search for new users to start a conversation to test real-time/offline messaging as well as other features using different devices or browsers.
 
 ### Interacting with Chatbots
 

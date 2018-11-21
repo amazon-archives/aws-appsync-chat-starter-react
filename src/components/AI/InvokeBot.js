@@ -13,7 +13,7 @@ class InvokeBot extends React.Component {
     const parts = withoutLinks[0].match(
       /.*Movie Name: (.*), Year: ([\d-]*), Plot: (.*)/
     );
-    const title = parts ? `${parts[1]} (${parts[2].split("-")[0]})` : "Oops";
+    const title = parts ? `${parts[1]} (${parts[2].split("-")[0]})` : <i className="fas fa-question-circle"></i>;
     const description = parts ? parts[3] : text;
     if (matches) {
       imdbLink = matches[0];
@@ -22,23 +22,27 @@ class InvokeBot extends React.Component {
     return (
       <div>
         <div className="media">
+        {imdbPoster ? (
           <img
-            className="mr-3"
-            src={imdbPoster}
-            alt="Poster"
-            style={{ width: "72px" }}
-          />
+          className="mr-3"
+          src={imdbPoster}
+          alt="Poster"
+          style={{ width: "72px" }}
+        />
+        ):null}
           <div className="media-body text-white">
             <h5 className="mt-0">{title}</h5>
             <div>
               {description} <br />
-              <button
-                className="btn btn-outline-light text-white"
-                href={imdbLink}
-                target="_blank noopener noreferrer"
-              >
-                <strong>View on IMDB</strong>
-              </button>
+              {imdbLink ? (
+                <a
+                  className="btn btn-outline-light text-white"
+                  href={imdbLink}
+                  target="_blank noopener noreferrer"
+                >
+                  <strong>View on IMDB</strong>
+                </a>
+              ):null}
             </div>
           </div>
         </div>
