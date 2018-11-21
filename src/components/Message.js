@@ -1,46 +1,47 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import Popover, { ArrowContainer } from 'react-tiny-popover'
-import moment from 'moment'
-import Labels from './AI/DetectLabels'
-import Celebs from './AI/DetectCelebs'
-import Dictate from './AI/Dictate'
-import AIMenu from './AI/MenuDropDown'
-import TranslateCard from './AI/TranslateCard'
-import Bot from './AI/Bot'
-import DetectSentiment from './AI/DetectSentiment'
-import DetectEntities from './AI/DetectEntities'
-import InvokeBot from './AI/InvokeBot'
-import lex from '../images/lex.png'
-import uuid from 'uuid/v4'
-import { Auth, Storage, Cache } from 'aws-amplify'
-import awsmobile from '../aws-exports'
+import React from "react";
+import PropTypes from "prop-types";
+import Popover, { ArrowContainer } from "react-tiny-popover";
+import moment from "moment";
+import Labels from "./AI/DetectLabels";
+import Celebs from "./AI/DetectCelebs";
+import Dictate from "./AI/Dictate";
+import AIMenu from "./AI/MenuDropDown";
+import TranslateCard from "./AI/TranslateCard";
+import Bot from "./AI/Bot";
+import DetectSentiment from "./AI/DetectSentiment";
+import DetectEntities from "./AI/DetectEntities";
+import InvokeBot from "./AI/InvokeBot";
+import lex from "../images/lex.png";
+import chuck from "../images/chuck.jpg";
+import uuid from "uuid/v4";
+import { Auth, Storage, Cache } from "aws-amplify";
+import awsmobile from "../aws-exports";
 
-const VISIBILITY = 'protected'
+const VISIBILITY = "protected";
 
-Storage.configure({ level: 'protected' })
+Storage.configure({ level: "protected" });
 
 function formatDate(date) {
   return moment(date).calendar(null, {
-    sameDay: 'LT',
-    lastDay: 'MMM D LT',
-    lastWeek: 'MMM D LT',
-    sameElse: 'l'
-  })
+    sameDay: "LT",
+    lastDay: "MMM D LT",
+    lastWeek: "MMM D LT",
+    sameElse: "l"
+  });
 }
 
 const BOTS = {
-  CHUCKBOT: 'ChuckBot',
-  MOVIEBOT: 'MovieBot'
-}
+  CHUCKBOT: "ChuckBot",
+  MOVIEBOT: "MovieBot"
+};
 
 const voiceMap = {
-  en: 'Matthew',
-  zh: 'Zhiyu',
-  pt: 'Ricardo',
-  fr: 'Mathieu',
-  es: 'Miguel'
-}
+  en: "Matthew",
+  zh: "Zhiyu",
+  pt: "Ricardo",
+  fr: "Mathieu",
+  es: "Miguel"
+};
 
 export default class Message extends React.Component {
   state = {
@@ -58,139 +59,139 @@ export default class Message extends React.Component {
     detectLanguage: false,
     dropdownOpen: false,
     sentiment: false
-  }
+  };
   componentDidMount() {
-    const { msg: currMsg } = this.props
-    const now = new Date().getTime()
-    this.checkFileUrl()
+    const { msg: currMsg } = this.props;
+    const now = new Date().getTime();
+    this.checkFileUrl();
     // console.log('mounted since, ', now - Date.parse(currMsg.createdAt))
     if (now - Date.parse(currMsg.createdAt) < 200) {
-      if (currMsg.content.includes('@chuckbot')) {
-        this.setState({ bot: BOTS.CHUCKBOT, chuckbot: true })
+      if (currMsg.content.includes("@chuckbot")) {
+        this.setState({ bot: BOTS.CHUCKBOT, chuckbot: true });
       }
-      if (currMsg.content.includes('@moviebot')) {
-        this.setState({ bot: BOTS.MOVIEBOT })
+      if (currMsg.content.includes("@moviebot")) {
+        this.setState({ bot: BOTS.MOVIEBOT });
       }
     } else {
-      this.setState({ bot: null })
+      this.setState({ bot: null });
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { msg: prevMsg } = prevProps
-    const { msg: currMsg } = this.props
+    const { msg: prevMsg } = prevProps;
+    const { msg: currMsg } = this.props;
     if (
       prevMsg.file &&
       prevMsg.file.key === null &&
       currMsg.file &&
       currMsg.file.key
     ) {
-      this.checkFileUrl()
+      this.checkFileUrl();
     }
   }
 
   checkFileUrl() {
-    const { file } = this.props.msg
+    const { file } = this.props.msg;
     if (file && file.key) {
-      const fileUrl = Cache.getItem(file.key)
+      const fileUrl = Cache.getItem(file.key);
       if (fileUrl) {
-        console.log(`Retrieved cache url for ${file.key}: ${fileUrl}`)
-        this.setState({ key: file.key })
-        return this.setState({ fileUrl })
+        console.log(`Retrieved cache url for ${file.key}: ${fileUrl}`);
+        this.setState({ key: file.key });
+        return this.setState({ fileUrl });
       }
 
       const [, identityIdWithSlash, keyWithoutPrefix] =
-        /([^/]+\/){2}(.*)$/.exec(file.key) || file.key
-      const identityId = identityIdWithSlash.replace(/\//g, '')
+        /([^/]+\/){2}(.*)$/.exec(file.key) || file.key;
+      const identityId = identityIdWithSlash.replace(/\//g, "");
       console.log(
         `Retrieved new key for ${file.key}: ${identityId} - ${keyWithoutPrefix}`
-      )
+      );
       Storage.get(keyWithoutPrefix, { identityId }).then(fileUrl => {
-        console.log(`New url for ${file.key}: ${fileUrl}`)
+        console.log(`New url for ${file.key}: ${fileUrl}`);
         const expires = moment()
-          .add(14, 'm')
+          .add(14, "m")
           .toDate()
-          .getTime()
-        Cache.setItem(file.key, fileUrl, { expires })
-        this.setState({ fileUrl })
-      })
+          .getTime();
+        Cache.setItem(file.key, fileUrl, { expires });
+        this.setState({ fileUrl });
+      });
     }
   }
 
   getImageLabels(message) {
-    this.setState({ popover: !this.state.popover, key: message.file.key })
+    this.setState({ popover: !this.state.popover, key: message.file.key });
   }
 
   dictate = async () => {
-    const message = this.props.msg.content
-    const { identityId } = await Auth.currentCredentials()
-    const key = `${VISIBILITY}/${identityId}/${uuid()}`
-    const voice = voiceMap[this.state.originalLanguage] || 'Russel'
+    const message = this.props.msg.content;
+    const { identityId } = await Auth.currentCredentials();
+    const key = `${VISIBILITY}/${identityId}/${uuid()}`;
+    const voice = voiceMap[this.state.originalLanguage] || "Russel";
     this.setState({
       key: key,
       voice: voice,
       toDictate: message,
       dictate: true
-    })
-  }
+    });
+  };
 
   dictateTranslated = async () => {
-    const message = this.state.translated
-    console.log('Translated Text to Dictate:' + message)
-    const { identityId } = await Auth.currentCredentials()
-    const key = `${VISIBILITY}/${identityId}/${uuid()}`
-    const voice = voiceMap[this.state.selectedLanguage] || 'Russel'
+    const message = this.state.translated;
+    console.log("Translated Text to Dictate:" + message);
+    const { identityId } = await Auth.currentCredentials();
+    const key = `${VISIBILITY}/${identityId}/${uuid()}`;
+    const voice = voiceMap[this.state.selectedLanguage] || "Russel";
     this.setState({
       key: key,
       voice: voice,
       toDictate: message,
       dictate: true
-    })
-  }
+    });
+  };
 
   comprehend = () => {
-    this.setState({ sentiment: true })
-  }
+    this.setState({ sentiment: true });
+  };
 
   getDetectedLanguage = language => {
-    console.log('Detected Language from DetectLanguage Component: ' + language)
-  }
+    console.log("Detected Language from DetectLanguage Component: " + language);
+  };
 
   getTranslated = translated => {
-    console.log('Translated Text from Translate Component: ' + translated)
-  }
+    console.log("Translated Text from Translate Component: " + translated);
+  };
 
   setLanguageCode = code => {
-    this.setState({ originalLanguage: code })
-  }
+    this.setState({ originalLanguage: code });
+  };
 
   toggleDropDown = () => {
-    this.setState({ dropdownOpen: !this.state.dropdownOpen })
-  }
+    this.setState({ dropdownOpen: !this.state.dropdownOpen });
+  };
 
   closeTranslateCard = () => {
-    this.setState({ selectedLanguage: null, dictate: false })
-  }
+    this.setState({ selectedLanguage: null, dictate: false });
+  };
 
   applyState = state => {
-    this.setState(state)
-  }
+    this.setState(state);
+  };
 
   render() {
-    const { msg, username, ownsPrev, isUser } = this.props
-    const { fileUrl, bucket, key, voice, toDictate, bot, popover } = this.state
+    const { msg, username, ownsPrev, isUser } = this.props;
+    const { fileUrl, bucket, key, voice, toDictate, bot, popover } = this.state;
 
     const outerClassName =
-      'd-inline-flex' + (isUser && !msg.chatbot ? '' : ' flex-row-reverse')
+      "d-inline-flex" + (isUser && !msg.chatbot ? "" : " flex-row-reverse");
     const innerClassName =
-      'chatMsg shadow-sm pt-1 pb-1 px-2 rounded m-2 ' +
+      "chatMsg shadow-sm pt-1 pb-1 px-2 rounded m-2 " +
       (msg.chatbot
-        ? 'bg-info text-white'
+        ? "bg-info text-white"
         : isUser
-        ? 'bg-ember text-white'
-        : 'bg-ampligygray text-white')
+        ? "bg-ember text-white"
+        : "bg-ampligygray text-white");
     const checkStatusClassName =
-      'ml-1 ' + (msg.isSent ? 'text-blue' : 'text-muted')
+      "ml-1 " + (msg.isSent ? "text-blue" : "text-muted");
 
     return (
       <div className={outerClassName}>
@@ -227,14 +228,14 @@ export default class Message extends React.Component {
                 <div>
                   <Popover
                     isOpen={popover}
-                    position={['top', 'bottom', 'right', 'left']}
+                    position={["top", "bottom", "right", "left"]}
                     disableReposition
                     content={({ position, targetRect, popoverRect }) => (
                       <ArrowContainer
                         position={position}
                         targetRect={targetRect}
                         popoverRect={popoverRect}
-                        arrowColor={'white'}
+                        arrowColor={"white"}
                         arrowSize={10}
                         arrowStyle={{ opacity: 1 }}
                       >
@@ -253,9 +254,9 @@ export default class Message extends React.Component {
                           <div
                             className="scrollable"
                             style={{
-                              backgroundColor: 'white',
+                              backgroundColor: "white",
                               opacity: 1,
-                              width: '300px'
+                              width: "300px"
                             }}
                             onClick={() => this.setState({ popover: !popover })}
                           >
@@ -291,7 +292,7 @@ export default class Message extends React.Component {
                         alt="Amazon Lex"
                         className="p-1"
                         style={{
-                          width: '30px'
+                          width: "30px"
                         }}
                       />
                       {msg.content.match(/\[(\w+)\]/)[1]}
@@ -302,6 +303,18 @@ export default class Message extends React.Component {
                       ) : (
                         msg.content.match(/\[\w+\]\s*(.*)/)[1]
                       )}
+                      {msg.content.startsWith(`[${BOTS.CHUCKBOT}]`) ? (
+                        <div className="col-2 p-0 mx-auto text-center">
+                          <img
+                            src={chuck}
+                            className="rounded-circle"
+                            alt="Chuck Norris Facts"
+                            style={{
+                              width: "65px"
+                            }}
+                          />
+                        </div>
+                      ) : null}
                     </div>
                   </div>
                 </div>
@@ -335,7 +348,7 @@ export default class Message extends React.Component {
                 </div>
                 <span>
                   <small>Sentiment Analysis:</small>
-                </span>{' '}
+                </span>{" "}
                 <small>
                   <button
                     type="button"
@@ -367,7 +380,7 @@ export default class Message extends React.Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
@@ -376,4 +389,4 @@ Message.propTypes = {
   username: PropTypes.string.isRequired,
   ownsPrev: PropTypes.bool.isRequired,
   isUser: PropTypes.bool.isRequired
-}
+};
