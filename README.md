@@ -13,7 +13,20 @@
 
 ## Introduction
 
-This is a Starter React Progressive Web Application (PWA) that uses AWS AppSync to implement offline and real-time capabilities in a chat application with AI/ML features such as image recognition, text-to-speech, language translation, sentiment analysis as well as conversational chatbots. In the chat app, users can search for users and messages, have conversations with other users, upload images and exchange messages. The application demonstrates GraphQL Mutations, Queries and Subscriptions using AWS AppSync and other AWS Services such as AWS Lambda, Amazon DynamoDB, Amazon Comprehend, Amazon Lex and others. You can use this for learning purposes or adapt either the application or the GraphQL Schema to meet your needs.
+in conjunction with This is a Starter React Progressive Web Application (PWA) that uses AWS AppSync to implement offline and real-time capabilities in a chat application with AI/ML features such as image recognition, text-to-speech, language translation, sentiment analysis as well as conversational chatbots. In the chat app, users can search for users and messages, have conversations with other users, upload images and exchange messages. The application demonstrates GraphQL Mutations, Queries and Subscriptions with AWS AppSync integrating with other AWS Services:
+
+- Amazon Cognito for user management as well as AuthN/Z
+- Amazon DynamoDB with 4x NoSQL Data Sources
+- Amazon Elasticsearch for full text search on messages and users
+- AWS Lambda as a Serverless Data Source connecting to AI Services
+- Amazon Comprehend for sentiment and entity analysis as well as language detection
+- Amazon Rekognition for object, scene and celebrity detection on images
+- Amazon Lex for conversational chatbots
+- Amazon Polly for text-to-speach on messages
+- Amazon Translate for language translation
+- Amazon S3 for Media Storage
+
+ You can use this for learning purposes or adapt either the application or the GraphQL Schema to meet your needs.
 
 ![ChatQL Overview](/media/ChatQLv2.png)
 
@@ -23,8 +36,8 @@ This is a Starter React Progressive Web Application (PWA) that uses AWS AppSync 
 
 - [AWS Account](https://aws.amazon.com/mobile/details) with appropriate permissions to create the related resources
 - [NodeJS](https://nodejs.org/en/download/) with [NPM](https://docs.npmjs.com/getting-started/installing-node)
-- [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) `(pip install awscli --upgrade --user)`
-- [AWS Amplify CLI](https://github.com/aws-amplify/amplify-cli) (configured for a region where [AWS AppSync](https://docs.aws.amazon.com/general/latest/gr/rande.html) and all other services in use are available) `(npm install -g @aws-amplify/cli)`
+- [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) with output configured as JSON `(pip install awscli --upgrade --user)`
+- [AWS Amplify CLI](https://github.com/aws-amplify/amplify-cli) configured for a region where [AWS AppSync](https://docs.aws.amazon.com/general/latest/gr/rande.html) and all other services in use are available `(npm install -g @aws-amplify/cli)`
 - [AWS SAM CLI](https://github.com/awslabs/aws-sam-cli) `(pip install --user aws-sam-cli)`
 - [Create React App](https://github.com/facebook/create-react-app) `(npm install -g create-react-app)`
 - [Install JQ](https://stedolan.github.io/jq/)

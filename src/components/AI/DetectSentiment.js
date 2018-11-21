@@ -52,7 +52,7 @@ function DetectSentiment({ data: { loading, error, detectSentiment } }) {
               <tr>
                 <td className="text-center bg-primary p-0">
                   <h1>
-                    <span>{getEmoji(sentiment)}</span>
+                    <span>{getEmoji(Sentiment)}</span>
                   </h1>
                 </td>
               </tr>
