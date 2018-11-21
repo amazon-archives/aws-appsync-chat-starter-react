@@ -84,16 +84,7 @@ function ChuckBot({ msg, update, botName, client }) {
       <span>
         <small className="float-left">Select the Chuck Norris fact:</small>
       </span>
-      <small>
-        <button
-          type="button"
-          className="close text-right"
-          aria-label="Close"
-          onClick={() => this.setState({ chuckbot: false })}
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </small>
+      <br />
       <br />
       <div className="card mx-auto">
         <div className="container p-2">

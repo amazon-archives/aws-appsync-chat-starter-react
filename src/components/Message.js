@@ -53,6 +53,7 @@ export default class Message extends React.Component {
     translated: null,
     selectedLanguage: null,
     originalLanguage: null,
+    chuckbot: null,
     bot: null,
     voice: null,
     dictate: false,
@@ -370,7 +371,21 @@ export default class Message extends React.Component {
                 />
               </div>
             )}
-            {bot && <Bot botName={bot} msg={msg} update={this.applyState} />}
+            {bot && (
+              <div>
+                <small>
+                  <button
+                    type="button"
+                    className="close text-right"
+                    aria-label="Close"
+                    onClick={() => this.setState({ bot: false })}
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </small>
+                <Bot botName={bot} msg={msg} update={this.applyState} />
+              </div>
+            )}
           </div>
           <div className="small d-block text-right">
             {formatDate(msg.createdAt)}
