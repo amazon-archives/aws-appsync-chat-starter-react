@@ -13,7 +13,7 @@ class InvokeBot extends React.Component {
     const parts = withoutLinks[0].match(
       /.*Movie Name: (.*), Year: ([\d-]*), Plot: (.*)/
     );
-    const title = parts ? `${parts[1]} (${parts[2].split("-")[0]})` : <i className="fas fa-question-circle"></i>;
+    const title = parts ? `${parts[1]} (${parts[2].split("-")[0]})` : <div className="col-2 p-0 mx-auto text-center"><i className="fas fa-question-circle"></i></div>;
     const description = parts ? parts[3] : text;
     if (matches) {
       imdbLink = matches[0];
