@@ -105,7 +105,6 @@ export default graphql(detectCelebs, {
     variables: {
       bucket: props.bucket,
       key: props.path
-    },
-    fetchPolicy: "cache-and-network"
+    }
   })
 })(Celebs);

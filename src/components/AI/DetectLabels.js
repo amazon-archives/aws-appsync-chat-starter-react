@@ -103,7 +103,6 @@ export default graphql(detectLabels, {
     variables: {
       bucket: props.bucket,
       key: props.path
-    },
-    fetchPolicy: "cache-and-network"
+    }
   })
 })(Labels);
