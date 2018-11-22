@@ -75,7 +75,7 @@ Note: This solution uses Amazon Lex. The service is only supported in us-east-1,
    echo $AWS_REGION
    ```
 
-    Make sure **ALL** services are supported in this region or else you'll get errors in the next steps.
+    Make sure [**ALL**](https://docs.aws.amazon.com/general/latest/gr/rande.html) services are supported in this region or else you'll get errors in the next steps.
 
 4. Add an **Amazon Cognito User Pool** auth resource. Use the default configuration.
 
