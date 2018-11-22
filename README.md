@@ -68,12 +68,14 @@ Note: This solution uses Amazon Lex. The service is only supported in us-east-1,
    amplify init
    ```
 
-   Set the region we are deploying resources to
+   Set the region we are deploying resources to:
 
    ```bash
    export AWS_REGION=$(jq -r '.providers.awscloudformation.Region' amplify/#current-cloud-backend/amplify-meta.json)
    echo $AWS_REGION
    ```
+
+    Make sure **ALL** services are supported in this region or else you'll get errors in the next steps.
 
 4. Add an **Amazon Cognito User Pool** auth resource. Use the default configuration.
 
@@ -81,7 +83,7 @@ Note: This solution uses Amazon Lex. The service is only supported in us-east-1,
    amplify add auth
    ```
 
-5. Add an **AppSync GraphQL** API with **Amazon Cognito User Pool** for the API Authentication. Follow the default options. When prompted with "_Do you have an annotated GraphQL schema?_", select "Yes" and provide the schema file path `backend/schema.graphql`
+5. Add an **AppSync GraphQL** API with **Amazon Cognito User Pool** for the API Authentication. Follow the default options. When prompted with "_Do you have an annotated GraphQL schema?_", select **"YES"** and provide the schema file path `backend/schema.graphql`
 
    ```bash
    amplify add api
@@ -93,7 +95,7 @@ Note: This solution uses Amazon Lex. The service is only supported in us-east-1,
    amplify add storage
    ```
 
-7. Provisions your cloud resources with the latest local developments. When asked to generate code, answer "NO".
+7. Provisions your cloud resources with the latest local developments. When asked to generate code, answer **"NO"**.
 
    ```bash
    amplify push
