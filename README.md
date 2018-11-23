@@ -126,7 +126,7 @@ Note: This solution uses Amazon Lex. The service is only supported in us-east-1,
     echo $STACK_NAME
     ```
 
-11. Now we need to deploy 3 Lambda functions (one for AppSync and two for Lex) and configure the AppSync Resolvers that use Lambda accordingly. First, we install the npm dependencies of for each lambda function. We then package and deploy the changes with SAM.
+11. Now we need to deploy 3 Lambda functions (one for AppSync and two for Lex) and configure the AppSync Resolvers to use Lambda accordingly. First, we install the npm dependencies for each lambda function. We then package and deploy the changes with SAM.
 
     ```bash
     cd ./backend/chuckbot-lambda; npm install; cd ../..
@@ -137,7 +137,7 @@ Note: This solution uses Amazon Lex. The service is only supported in us-east-1,
     sam deploy --template-file ./packaged.yaml --stack-name $STACK_NAME_AIML --capabilities CAPABILITY_IAM --parameter-overrides appSyncAPI=$GRAPHQL_API_ID s3Bucket=$USER_FILES_BUCKET --region $AWS_REGION
     ```
 
-    Wait for the stack to finish deploying; then retrieve the functions' ARN
+    Wait for the stack to finish deploying then retrieve the functions' ARN
 
     ```bash
     export CHUCKBOT_FUNCTION_ARN=$(aws cloudformation describe-stacks --stack-name  $STACK_NAME_AIML --query Stacks[0].Outputs --region $AWS_REGION | jq -r '.[] | select(.OutputKey == "ChuckBotFunction") | .OutputValue')
@@ -146,7 +146,7 @@ Note: This solution uses Amazon Lex. The service is only supported in us-east-1,
     echo $MOVIEBOT_FUNCTION_ARN
     ```
 
-12. Let's set up Lex. We will create 2 chatbots: ChuckBot and MovieBot. Execute the following commands to add permissions so Lex can invoke the functions:
+12. Let's set up Lex. We will create 2 chatbots: ChuckBot and MovieBot. Execute the following commands to add permissions so Lex can invoke the chatbot related functions:
 
     ```bash
     aws lambda add-permission --statement-id Lex --function-name $CHUCKBOT_FUNCTION_ARN --action lambda:\* --principal lex.amazonaws.com --region $AWS_REGION
@@ -160,7 +160,7 @@ Note: This solution uses Amazon Lex. The service is only supported in us-east-1,
     jq '.fulfillmentActivity.codeHook.uri = $arn' --arg arn $MOVIEBOT_FUNCTION_ARN backend/MovieBot/intent.json -M > tmp.txt ; cp tmp.txt backend/MovieBot/intent.json; rm tmp.txt
     ```
 
-    And, deploy the slot types, intents and bots.
+    And, deploy the slot types, intents and bots:
 
     ```bash
     aws lex-models put-slot-type --cli-input-json file://backend/ChuckBot/slot-type.json --region $AWS_REGION
@@ -177,18 +177,18 @@ Note: This solution uses Amazon Lex. The service is only supported in us-east-1,
     amplify serve
     ```
 
-14. Access your ChatQLv2 app at http://localhost:3000. Sign up at least 2 different users, authenticate with each user to get them registered in the backend (Users Table), then search for new users to start a conversation to test real-time/offline messaging as well as other features using different devices or browsers.
+14. Access your ChatQLv2 app at http://localhost:3000. Sign up at least 2 different users, authenticate with each user to get them registered in the backend Users table, then search for new users to start a conversation and test real-time/offline messaging as well as other features using different devices or browsers.
 
 ### Interacting with Chatbots
 
 _The chatbots retrieve information online via API calls from Lambda to [The Movie Database (TMDb)](https://www.themoviedb.org/) (MovieBot, which is based on this [chatbot sample](https://github.com/aws-samples/aws-lex-convo-bot-example)) and [chucknorris.io ](https://api.chucknorris.io/) (ChuckBot)_
 
-1. In order to start or respond to a chatbot conversation, you need to start the message with either `@chuckbot` or `@moviebot` to trigger or respond to the specific bot, for example:
+1. In order to initiate or respond to a chatbot conversation, you need to start the message with either `@chuckbot` or `@moviebot` to trigger or respond to the specific bot, for example:
 
-   - @chuckbot Give me a Chuck Norris fact
-   - @moviebot Tell me about a movie
+   - *@chuckbot Give me a Chuck Norris fact*
+   - *@moviebot Tell me about a movie*
 
-2. Each subsequent response needs to start with the bot handle (@chuckbot or @moviebot) so the app can detect the message is directed to Lex and not to the other user in the conversation. Both users will be able to view Lex chatbot responses in real-time thanks to GraphQL subscriptions.
+2. Each subsequent response needs to start with the bot handle (@chuckbot or @moviebot) so the app can detect the message is directed to Lex and not to the other user in the same conversation. Both users will be able to view Lex chatbot responses in real-time powered by GraphQL subscriptions.
 3. Alternatively you can start a chatbot conversation from the message drop-down menu:
 
    - Just selecting `ChuckBot` will display options for further interaction
@@ -196,10 +196,10 @@ _The chatbots retrieve information online via API calls from Lambda to [The Movi
 
 ### Interacting with other AWS AI Services
 
-1. Click or select uploaded images to trigger Amazon Rekognition object, scene and celebrity detection
-2. From the drop-down menu, select LISTEN -> TEXT TO SPEECH to trigger Amazon Polly and listen to messages in different voices depending on the message source language (supported languages: English, Mandarin, Portuguese, French and Spanish)
-3. To perform message entity and sentiment analysis via Amazon Comprehend, select ANALYZE -> SENTIMENT
-4. To translate the message select the desired message under TRANSLATE. In the translation pane, click on the microphone icon to listen to the translated message.
+1. Click or select uploaded images to trigger Amazon Rekognition object, scene and celebrity detection.
+2. From the drop-down menu, select LISTEN -> TEXT TO SPEECH to trigger Amazon Polly and listen to messages in different voices based on the message automatically detected source language (supported languages: English, Mandarin, Portuguese, French and Spanish).
+3. To perform entity and sentiment analysis on messages via Amazon Comprehend, select ANALYZE -> SENTIMENT from the drop-down menu.
+4. To translate the message select the desired message under TRANSLATE in the drop-down menu. In the translation pane, click on the microphone icon to listen to the translated message.
 
 ## Building, Deploying and Publishing
 
@@ -217,7 +217,7 @@ _The chatbots retrieve information online via API calls from Lambda to [The Movi
 
 ## Clean Up
 
-To clean up the project, you can simply delete the stack you created or use the Amplify CLI, depending on how you deployed the application.
+To clean up the project, you can simply delete the stack created by the SAM CLI:
 
 ```bash
 aws cloudformation delete-stack --stack-name $STACK_NAME_AIML --region $AWS_REGION
@@ -228,3 +228,5 @@ and use:
 ```bash
 amplify delete
 ```
+
+to delete the resources created by the Amplify CLI.
