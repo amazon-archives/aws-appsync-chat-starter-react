@@ -24,7 +24,7 @@ This is a Starter React Progressive Web Application (PWA) that uses AWS AppSync 
 - Amazon Comprehend for sentiment and entity analysis as well as language detection
 - Amazon Rekognition for object, scene and celebrity detection on images
 - Amazon Lex for conversational chatbots
-- Amazon Polly for text-to-speach on messages
+- Amazon Polly for text-to-speech on messages
 - Amazon Translate for language translation
 - Amazon S3 for Media Storage
 
@@ -203,7 +203,7 @@ _The chatbots retrieve information online via API calls from Lambda to [The Movi
 
 ## Building, Deploying and Publishing
 
-1. Execute `amplify add hosting` from the project's root folder and follow the prompts to create a S3 bucket (DEV) and/or a CloudFront distribution (PROD).
+1. Execute `amplify add hosting` from the project's root folder and follow the prompts to create an S3 bucket (DEV) and/or a CloudFront distribution (PROD).
 
 2. Build and publish the application:
 
