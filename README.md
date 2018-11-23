@@ -95,7 +95,7 @@ Note: This solution uses Amazon Lex. The service is only supported in us-east-1,
    amplify add storage
    ```
 
-7. Now it's time to provision your cloud resources based on the local configuration and configured features. When asked to generate code, answer **"NO"** as it will overwrite the current custom files in the `src/graphql` folder.
+7. Now it's time to provision your cloud resources based on the local setup and configured features. When asked to generate code, answer **"NO"** as it would overwrite the current custom files in the `src/graphql` folder.
 
    ```bash
    amplify push
