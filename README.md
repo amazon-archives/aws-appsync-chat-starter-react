@@ -198,7 +198,7 @@ _The chatbots retrieve information online via API calls from Lambda to [The Movi
 
 1. Click or select uploaded images to trigger Amazon Rekognition object, scene and celebrity detection
 2. From the drop-down menu, select LISTEN -> TEXT TO SPEECH to trigger Amazon Polly and listen to messages in different voices depending on the message source language (supported languages: English, Mandarin, Portuguese, French and Spanish)
-3. To perform message entity and sentiment analysis via Amazon Comprehend, select ANALYSE -> SENTIMENT
+3. To perform message entity and sentiment analysis via Amazon Comprehend, select ANALYZE -> SENTIMENT
 4. To translate the message select the desired message under TRANSLATE. In the translation pane, click on the microphone icon to listen to the translated message.
 
 ## Building, Deploying and Publishing
@@ -211,7 +211,7 @@ _The chatbots retrieve information online via API calls from Lambda to [The Movi
    amplify publish
    ```
 
-3. If you are deploying a CloudFront distribuiton, be mindful it needs to be replicated across all points of presence globally and it might take up to 15 minutes to do so.
+3. If you are deploying a CloudFront distribution, be mindful it needs to be replicated across all points of presence globally and it might take up to 15 minutes to do so.
 
 4. Access your public ChatQL application using the S3 Website Endpoint URL or the CloudFront URL returned by the `amplify publish` command. Share the link with friends, sign up some users, and start creating conversations, uploading images, translating, executing text-to-speech in different languages, performing sentiment analysis and exchanging messages. Be mindful PWAs require SSL, in order to test PWA functionality access the CloudFront URL (HTTPS) from a mobile device and add the site to the mobile home screen.
 
