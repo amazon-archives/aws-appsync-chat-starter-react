@@ -15,6 +15,8 @@
 
 This is a Starter React Progressive Web Application (PWA) that uses AWS AppSync to implement offline and real-time capabilities in a chat application with AI/ML features such as image recognition, text-to-speech, language translation, sentiment analysis as well as conversational chatbots. In the chat app, users can search for users and messages, have conversations with other users, upload images and exchange messages. The application demonstrates GraphQL Mutations, Queries and Subscriptions with AWS AppSync integrating with other AWS Services:
 
+![ChatQL Overview](/media/ChatQLv2.png)
+
 - Amazon Cognito for user management as well as AuthN/Z
 - Amazon DynamoDB with 4x NoSQL Data Sources (Users, Messages, Conversations, ConvoLink)
 - Amazon Elasticsearch Data Source for full text search on messages and users
@@ -28,7 +30,7 @@ This is a Starter React Progressive Web Application (PWA) that uses AWS AppSync 
 
  You can use this for learning purposes or adapt either the application or the GraphQL Schema to meet your needs.
 
-![ChatQL Overview](/media/ChatQLv2.png)
+
 
 ## Getting Started
 
