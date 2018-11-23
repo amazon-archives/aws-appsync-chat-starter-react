@@ -99,7 +99,7 @@ Note: This solution uses Amazon Lex. The service is only supported in us-east-1,
    amplify push
    ```
 
-   Wait for the provisioning to complete. Once done, a `src/aws-exports.js` file with your resource information is created.
+   Wait for the provisioning to complete. Once done, a `src/aws-exports.js` file with the resources information is created.
 
 ___
 
