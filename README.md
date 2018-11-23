@@ -197,7 +197,7 @@ _The chatbots retrieve information online via API calls from Lambda to [The Movi
 1. Click or select uploaded images to trigger Amazon Rekognition object, scene and celebrity detection.
 2. From the drop-down menu, select LISTEN -> TEXT TO SPEECH to trigger Amazon Polly and listen to messages in different voices based on the message automatically detected source language (supported languages: English, Mandarin, Portuguese, French and Spanish).
 3. To perform entity and sentiment analysis on messages via Amazon Comprehend, select ANALYZE -> SENTIMENT from the drop-down menu.
-4. To translate the message select the desired message under TRANSLATE in the drop-down menu. In the translation pane, click on the microphone icon to listen to the translated message.
+4. To translate the message select the desired language under TRANSLATE in the drop-down menu (supported languages: English, Mandarin, Portuguese, French and Spanish). In the translation pane, click on the microphone icon to listen to the translated message.
 
 ## Building, Deploying and Publishing
 
