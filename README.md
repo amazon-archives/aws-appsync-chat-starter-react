@@ -101,7 +101,10 @@ Note: This solution uses Amazon Lex. The service is only supported in us-east-1,
 
    Wait for the provisioning to complete. Once done, a `src/aws-exports.js` file with your resource information is created.
 
+___
+
 ***At this point you have an usable chat application with any AI features. The next steps are only needed to deploy and configure the integration with services that provide image recognition, text-to-speech, language translation, sentiment analysis as well as conversational chatbots.***
+___
 
 8. Look up the S3 bucket name created for user storage:
 
