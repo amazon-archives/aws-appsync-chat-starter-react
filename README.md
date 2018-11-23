@@ -2,8 +2,6 @@
 
 ## Quicklinks
 
-- [ChatQLv2: An AWS AppSync Chat Starter App written in React](#chatqlv2-an-aws-appsync-chat-starter-app-written-in-react)
-  - [Quicklinks](#quicklinks)
   - [Introduction](#introduction)
   - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
@@ -205,7 +203,7 @@ _The chatbots retrieve information online via API calls from Lambda to [The Movi
 
 1. Execute `amplify add hosting` from the project's root folder and follow the prompts to create an S3 bucket (DEV) and/or a CloudFront distribution (PROD).
 
-2. Build and publish the application:
+2. Build, deploy, upload and publish the application with a single command:
 
    ```bash
    amplify publish
