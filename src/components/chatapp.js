@@ -322,7 +322,7 @@ const ChatAppWithData = compose(
         },
         update: (proxy, { data: { registerUser } }) => {
           const QUERY = {
-            query: getUser,
+            query: gql`${getUser}`,
             variables: { id: props.id }
           }
           const prev = proxy.readQuery(QUERY)
