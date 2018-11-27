@@ -2,13 +2,11 @@ import React from 'react'
 import Downshift from 'downshift'
 import { Scrollbars } from 'react-custom-scrollbars'
 import PropTypes from 'prop-types'
-// import onUpdateConvoLink from '../graphql/subscriptions/onUpdateConvoLink'
 import { onUpdateConvoLink } from '../graphql/subscriptions'
 import _cloneDeep from 'lodash.clonedeep'
 import _debounce from 'lodash.debounce'
 import SideList from './ConvoSideList'
 import { SearchResultListWithData } from './SearchResultList'
-import gql from 'graphql-tag'
 
 const SearchBar = ({ propsFn }) => (
   <div className="px-3 py-2 section">
@@ -154,9 +152,7 @@ SideBar.propTypes = {
 
 function createSubForConvoList(subscribeToMore, userId) {
   return subscribeToMore({
-    document: gql`
-      ${onUpdateConvoLink}
-    `,
+    document: onUpdateConvoLink,
     variables: { convoLinkUserId: userId, status: 'READY' },
     updateQuery: (
       prev,

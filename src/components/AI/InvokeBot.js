@@ -6,7 +6,7 @@ class InvokeBot extends React.Component {
     let imdbPoster
     const { text } = this.props
     // console.log(this.props)
-    const expression = /(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})/gi
+    const expression = /(https?:\/\/(?:www\.|(?!www))[^\s.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})/gi
     const matches = text.match(expression)
     const withoutLinks = text.split('- IMDB')
     // console.log(withoutLinks[0])

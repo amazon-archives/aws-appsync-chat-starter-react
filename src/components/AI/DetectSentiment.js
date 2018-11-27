@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { graphql } from 'react-apollo'
 import comprehend from '../../images/comprehend.png'
-import detectSentiment from '../../graphql/queries/detectSentiment'
+import detectSentiment from '../../graphql/AI/detectSentiment'
 
 const score = val => Number.parseFloat(val * 100).toFixed(2) + '%'
 const getEmoji = Sentiment => {

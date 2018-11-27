@@ -4,7 +4,6 @@ import { searchMessages, searchUsers } from '../graphql/queries'
 import { graphql, compose } from 'react-apollo'
 import BarLoader from 'react-spinners/BarLoader'
 import moment from 'moment'
-import gql from 'graphql-tag'
 
 function formatDate(date) {
   return moment(date).calendar(null, {
@@ -218,39 +217,27 @@ function buildMsgFilter(term, conversations = {}) {
 }
 
 const SearchResultListWithData = compose(
-  graphql(
-    gql`
-      ${searchUsers}
-    `,
-    {
-      name: 'userSearchData',
-      skip: props => !props.term,
-      options: props => ({
-        variables: {
-          filter: { username: { regexp: `.*${props.term}.*` } }
-        },
-        fetchPolicy: 'cache-and-network'
-      })
-    }
-  ),
-  graphql(
-    gql`
-      ${searchMessages}
-    `,
-    {
-      name: 'msgSearchData',
-      skip: props =>
-        !props.term ||
-        !props.conversations ||
-        !props.conversations.items.length,
-      options: props => ({
-        variables: {
-          filter: buildMsgFilter(props.term, props.conversations)
-        },
-        fetchPolicy: 'cache-and-network'
-      })
-    }
-  )
+  graphql(searchUsers, {
+    name: 'userSearchData',
+    skip: props => !props.term,
+    options: props => ({
+      variables: {
+        filter: { username: { regexp: `.*${props.term}.*` } }
+      },
+      fetchPolicy: 'cache-and-network'
+    })
+  }),
+  graphql(searchMessages, {
+    name: 'msgSearchData',
+    skip: props =>
+      !props.term || !props.conversations || !props.conversations.items.length,
+    options: props => ({
+      variables: {
+        filter: buildMsgFilter(props.term, props.conversations)
+      },
+      fetchPolicy: 'cache-and-network'
+    })
+  })
 )(SearchResultList)
 
 export default SearchResultList

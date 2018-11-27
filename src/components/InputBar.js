@@ -2,13 +2,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { createMessage } from '../graphql/mutations'
-// import getConvoMessages from "../graphql/queries/getConvoMessages";
 import { getConvo } from '../graphql/queries'
 import { graphql } from 'react-apollo'
 import uuid from 'uuid/v4'
 import { Popover, PopoverHeader, PopoverBody } from 'reactstrap'
-//import AudioCapture from "./AudioCapture";
-import gql from 'graphql-tag'
 
 import { Auth } from 'aws-amplify'
 import awsmobile from '../aws-exports'
@@ -91,9 +88,7 @@ const doCreateMessage = (
     },
     update: (proxy, { data: { createMessage: newMsg } }) => {
       const QUERY = {
-        query: gql`
-          ${getConvo}
-        `,
+        query: getConvo,
         variables: { id: convoId }
       }
       const prev = proxy.readQuery(QUERY)
@@ -235,12 +230,7 @@ InputBar.propTypes = {
   userId: PropTypes.string
 }
 
-const InputBarWithData = graphql(
-  gql`
-    ${createMessage}
-  `,
-  {
-    name: 'createMessage'
-  }
-)(InputBar)
+const InputBarWithData = graphql(createMessage, {
+  name: 'createMessage'
+})(InputBar)
 export { InputBarWithData }

@@ -7,7 +7,7 @@ import {
   DropdownItem
 } from 'reactstrap'
 import { graphql } from 'react-apollo'
-import detectLanguage from '../../graphql/queries/detectLanguage'
+import detectLanguage from '../../graphql/AI/detectLanguage'
 const langMap = [
   { code: 'en', lang: 'English' },
   { code: 'zh', lang: 'Chinese' },
@@ -49,9 +49,8 @@ class AIMenu extends React.Component {
     } = this.props
     const response = readResponse(this.props)
     const code = response ? JSON.parse(response)[0].LanguageCode : null
-    console.log(JSON.stringify(this.props, null, 2), response, code)
-    const hasText =
-      this.props.msg.content && this.props.msg.content.trim().length
+    // console.log(JSON.stringify(this.props, null, 2), response, code)
+    const hasText = msg.content && msg.content.trim().length
     return (
       <Dropdown isOpen={dropdownOpen} toggle={toggleDropDown}>
         <DropdownToggle

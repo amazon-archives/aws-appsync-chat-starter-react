@@ -7,7 +7,6 @@ import { Subject, of, from } from 'rxjs'
 import { pairwise, filter, exhaustMap } from 'rxjs/operators'
 import WordCloud from 'react-d3-cloud'
 import sizeMe from 'react-sizeme'
-import gql from 'graphql-tag'
 
 const SCROLL_THRESHOLD = 0.25
 
@@ -164,9 +163,7 @@ class MessagePane extends React.Component {
       userId
     } = this.props
     return subscribeToMore({
-      document: gql`
-        ${onCreateMessage}
-      `,
+      document: onCreateMessage,
       variables: { messageConversationId: convoId },
       updateQuery: (
         prev,

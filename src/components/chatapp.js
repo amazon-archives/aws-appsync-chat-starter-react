@@ -3,20 +3,15 @@ import PropTypes from 'prop-types'
 import { Auth } from 'aws-amplify'
 import { graphql, compose } from 'react-apollo'
 import { getUser } from '../graphql/queries'
-// import registerUser from '../graphql/mutations/registerUser'
 import {
   registerUser,
   createConvo,
   createConvoLink,
   updateConvoLink
 } from '../graphql/mutations'
-// import createConversation from '../graphql/mutations/createConversation'
-// import createConvoLink from '../graphql/mutations/createConvoLink'
-// import updateConvoLink from '../graphql/mutations/updateConvoLink'
 import UserBar from './UserBar'
 import SideBar from './SideBar'
 import { MessengerWithData } from './Messenger'
-import gql from 'graphql-tag'
 
 function chatName(userName) {
   return `${userName} (chat)`
@@ -282,108 +277,83 @@ ChatApp.propTypes = {
 }
 
 const ChatAppWithData = compose(
-  graphql(
-    gql`
-      ${getUser}
-    `,
-    {
-      skip: props => !props.id,
-      options: props => ({
-        variables: { id: props.id },
-        fetchPolicy: 'cache-and-network'
-      })
-    }
-  ),
-  graphql(
-    gql`
-      ${registerUser}
-    `,
-    {
-      name: 'registerUser',
-      options: props => ({
-        variables: {
-          input: {
-            id: props.id,
-            username: props.name,
-            registered: true
-          }
-        },
-        optimisticResponse: {
-          registerUser: {
-            id: props.id,
-            username: 'Standby',
-            registered: false,
-            __typename: 'User',
-            userConversations: {
-              __typename: 'ModelConvoLinkConnection',
-              items: []
-            }
-          }
-        },
-        update: (proxy, { data: { registerUser } }) => {
-          const QUERY = {
-            query: gql`${getUser}`,
-            variables: { id: props.id }
-          }
-          const prev = proxy.readQuery(QUERY)
-          console.log('prev getUser', prev)
-          const data = {
-            ...prev,
-            getUser: { ...registerUser }
-          }
-          proxy.writeQuery({ ...QUERY, data })
+  graphql(getUser, {
+    skip: props => !props.id,
+    options: props => ({
+      variables: { id: props.id },
+      fetchPolicy: 'cache-and-network'
+    })
+  }),
+  graphql(registerUser, {
+    name: 'registerUser',
+    options: props => ({
+      variables: {
+        input: {
+          id: props.id,
+          username: props.name,
+          registered: true
         }
-      })
-    }
-  ),
-  graphql(
-    gql`
-      ${createConvo}
-    `,
-    {
-      name: 'createConvo',
-      options: props => ({
-        ignoreResults: true,
-        variables: {
-          input: { name: 'direct' }
-        },
-        optimisticResponse: {
-          createConvo: {
-            id: '-1',
-            name: 'direct',
-            createdAt: '',
-            __typename: 'Conversation',
-            associated: {
-              __typename: 'ModelConvoLinkConnection',
-              items: []
-            }
+      },
+      optimisticResponse: {
+        registerUser: {
+          id: props.id,
+          username: 'Standby',
+          registered: false,
+          __typename: 'User',
+          userConversations: {
+            __typename: 'ModelConvoLinkConnection',
+            items: []
           }
         }
-      })
-    }
-  ),
-  graphql(
-    gql`
-      ${createConvoLink}
-    `,
-    {
-      name: 'createConvoLink',
-      options: props => ({
-        ignoreResults: true
-      })
-    }
-  ),
-  graphql(
-    gql`
-      ${updateConvoLink}
-    `,
-    {
-      name: 'updateConvoLink',
-      options: props => ({
-        ignoreResults: true
-      })
-    }
-  )
+      },
+      update: (proxy, { data: { registerUser } }) => {
+        const QUERY = {
+          query: getUser,
+          variables: { id: props.id }
+        }
+        const prev = proxy.readQuery(QUERY)
+        console.log('prev getUser', prev)
+        const data = {
+          ...prev,
+          getUser: { ...registerUser }
+        }
+        proxy.writeQuery({ ...QUERY, data })
+      }
+    })
+  }),
+  graphql(createConvo, {
+    name: 'createConvo',
+    options: props => ({
+      ignoreResults: true,
+      variables: {
+        input: { name: 'direct' }
+      },
+      optimisticResponse: {
+        createConvo: {
+          id: '-1',
+          name: 'direct',
+          createdAt: '',
+          __typename: 'Conversation',
+          associated: {
+            __typename: 'ModelConvoLinkConnection',
+            items: []
+          }
+        }
+      }
+    })
+  }),
+  graphql(createConvoLink, {
+    name: 'createConvoLink',
+    options: props => ({
+      ignoreResults: true
+    })
+  }),
+  graphql(updateConvoLink, {
+    name: 'updateConvoLink',
+    options: props => ({
+      ignoreResults: true
+    })
+  })
 )(ChatApp)
 
 export default ChatApp

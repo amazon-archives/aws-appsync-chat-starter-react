@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { graphql } from 'react-apollo'
 import comprehend from '../../images/comprehend.png'
-import detectEntities from '../../graphql/queries/detectEntities'
+import detectEntities from '../../graphql/AI/detectEntities'
 
 const score = val => Number.parseFloat(val * 100).toFixed(2) + '%'
 

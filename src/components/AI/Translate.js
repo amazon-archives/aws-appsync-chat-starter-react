@@ -1,7 +1,7 @@
 import React from 'react'
 import { graphql } from 'react-apollo'
 import PropTypes from 'prop-types'
-import translate from '../../graphql/queries/translate'
+import translate from '../../graphql/AI/translate'
 
 class Translate extends React.Component {
   componentDidMount() {
