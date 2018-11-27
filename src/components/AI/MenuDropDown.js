@@ -20,12 +20,15 @@ const BOTS = {
   MOVIEBOT: 'MovieBot'
 }
 
+function readResponse(props) {
+  const { data: { detectLanguage } = {} } = props
+  return detectLanguage ? detectLanguage.response : undefined
+}
+
 class AIMenu extends React.Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const {
-      data: { detectLanguage: { response: oldResponse = null } = {} } = {}
-    } = prevProps
-    const { data: { detectLanguage: { response } = {} } = {} } = this.props
+    const oldResponse = readResponse(prevProps)
+    const response = readResponse(this.props)
 
     if (!oldResponse && response) {
       const code = JSON.parse(response)[0].LanguageCode
@@ -35,16 +38,22 @@ class AIMenu extends React.Component {
   }
 
   render() {
-    const { msg } = this.props
-    const { data: { detectLanguage: { response } = {} } = {} } = this.props
+    const {
+      msg,
+      dropdownOpen,
+      toggleDropDown,
+      dictate,
+      doBot,
+      comprehend,
+      setTranslation
+    } = this.props
+    const response = readResponse(this.props)
     const code = response ? JSON.parse(response)[0].LanguageCode : null
+    console.log(JSON.stringify(this.props, null, 2), response, code)
     const hasText =
       this.props.msg.content && this.props.msg.content.trim().length
     return (
-      <Dropdown
-        isOpen={this.props.dropdownOpen}
-        toggle={() => this.props.toggleDropDown()}
-      >
+      <Dropdown isOpen={dropdownOpen} toggle={toggleDropDown}>
         <DropdownToggle
           className="border-0 btn-sm py-0"
           style={{ backgroundColor: 'transparent' }}
@@ -53,14 +62,14 @@ class AIMenu extends React.Component {
         </DropdownToggle>
         <DropdownMenu className="align-items-left">
           <DropdownItem header>Listen</DropdownItem>
-          <DropdownItem onClick={this.props.dictate} className="small">
+          <DropdownItem onClick={dictate} className="small">
             <i className="fas fa-microphone-alt border border-dark rounded-circle p-1" />
             <span className="ml-1">Text to Speech</span>
           </DropdownItem>
           <DropdownItem header>Bots</DropdownItem>
           <DropdownItem
             value="ChuckBot"
-            onClick={e => this.props.doBot({ bot: BOTS.CHUCKBOT })}
+            onClick={e => doBot({ bot: BOTS.CHUCKBOT })}
             className="small"
           >
             <i className="fas fa-robot border border-dark rounded-circle p-1" />
@@ -68,32 +77,26 @@ class AIMenu extends React.Component {
           </DropdownItem>
           <DropdownItem
             value="MovieBot"
-            onClick={e => this.props.doBot({ bot: BOTS.MOVIEBOT })}
+            onClick={e => doBot({ bot: BOTS.MOVIEBOT })}
             className="small"
           >
             <i className="fas fa-robot border border-dark rounded-circle p-1" />
             <span className="ml-1">MovieBot</span>
           </DropdownItem>
-          {hasText ? (
+          {hasText && (
             <React.Fragment>
               <DropdownItem header>Analyze</DropdownItem>
-              <DropdownItem onClick={this.props.comprehend} className="small">
+              <DropdownItem onClick={comprehend} className="small">
                 <i className="fas fa-grin border border-dark rounded-circle p-1" />
                 <span className="ml-1">Sentiment</span>
               </DropdownItem>
-            </React.Fragment>
-          ) : null}
-          {hasText ? (
-            <React.Fragment>
               <DropdownItem header>Translate</DropdownItem>
               {langMap.map(l => (
                 <DropdownItem
                   key={l.code}
                   value={l.code}
                   disabled={!code || code === l.code}
-                  onClick={e =>
-                    this.props.setTranslation({ selectedLanguage: l.code })
-                  }
+                  onClick={e => setTranslation({ selectedLanguage: l.code })}
                   className="small"
                 >
                   <i className="fas fa-globe border border-dark rounded-circle p-1" />
@@ -101,7 +104,7 @@ class AIMenu extends React.Component {
                 </DropdownItem>
               ))}
             </React.Fragment>
-          ) : null}
+          )}
         </DropdownMenu>
       </Dropdown>
     )

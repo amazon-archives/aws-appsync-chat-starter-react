@@ -1,7 +1,0 @@
-{
-  "name": "",
-  "version": "",
-  "dependencies": {
-    "aws-sdk": "^2.325.0"
-  }
-}

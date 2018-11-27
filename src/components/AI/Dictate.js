@@ -5,14 +5,6 @@ import dictate from '../../graphql/queries/dictate'
 import Sound from 'react-sound'
 
 class Dictate extends React.Component {
-  state = {
-    playing: true
-  }
-
-  handleFinishedPlaying() {
-    this.setState({ playing: false })
-  }
-
   render() {
     //const { data } = this.props;
     //console.log(JSON.stringify(data));
@@ -29,7 +21,9 @@ class Dictate extends React.Component {
           </div>
         </div>
       )
-    } else if (error) {
+    }
+
+    if (error) {
       const err = JSON.stringify(error.message)
       return (
         <div className="alert alert-light text-center">
@@ -38,43 +32,39 @@ class Dictate extends React.Component {
           </small>
         </div>
       )
-    } else {
-      const response = JSON.parse(dictate.response)
-      console.log(response)
-      return (
-        <div>
-          {this.state.playing ? (
-            <div>
-              <hr />
-              <div className="mx-auto align-items-center card">
-                <Sound
-                  url={response}
-                  playStatus={Sound.status.PLAYING}
-                  loop={false}
-                  onFinishedPlaying={() => this.handleFinishedPlaying()}
-                />
-                <div className="boxContainer">
-                  <div className="box box1" />
-                  <div className="box box2" />
-                  <div className="box box3" />
-                  <div className="box box4" />
-                  <div className="box box5" />
-                </div>
-                <img
-                  src={polly}
-                  alt="Amazon Polly"
-                  className="p-1 float-right align-items-right"
-                  style={{
-                    width: '30px',
-                    height: '30px'
-                  }}
-                />
-              </div>
-            </div>
-          ) : null}
-        </div>
-      )
     }
+
+    const response = JSON.parse(dictate.response)
+    console.log('Dictate >', response)
+    return (
+      <div>
+        <hr />
+        <div className="mx-auto align-items-center card">
+          <Sound
+            url={response}
+            playStatus={Sound.status.PLAYING}
+            loop={false}
+            onFinishedPlaying={this.props.completed}
+          />
+          <div className="boxContainer">
+            <div className="box box1" />
+            <div className="box box2" />
+            <div className="box box3" />
+            <div className="box box4" />
+            <div className="box box5" />
+          </div>
+          <img
+            src={polly}
+            alt="Amazon Polly"
+            className="p-1 float-right align-items-right"
+            style={{
+              width: '30px',
+              height: '30px'
+            }}
+          />
+        </div>
+      </div>
+    )
   }
 }
 export default graphql(dictate, {
@@ -85,7 +75,6 @@ export default graphql(dictate, {
       key: props.path,
       voice: props.voice,
       text: props.text
-    },
-    fetchPolicy: 'cache-and-network'
+    }
   })
 })(Dictate)
