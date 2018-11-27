@@ -15,7 +15,7 @@ const ConversationBar = ({ conversation, name, switchView }) => {
           <i className="fas fa-chevron-circle-left" />
         </button>
         <span className="navbar-brand"> {title} </span>
-        <div className="d-flex flex-row align-items-center">
+        <div className="d-flex flex-row align-items-center ml-auto">
           <i className="fab fa-aws pr-2" style={{ fontSize: '1.5em' }} />
           <img
             src={appsync}
