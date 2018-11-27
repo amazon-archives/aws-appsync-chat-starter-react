@@ -2,14 +2,14 @@
 
 ## Quicklinks
 
-  - [Introduction](#introduction)
-  - [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Backend Setup](#backend-setup)
-    - [Interacting with Chatbots](#interacting-with-chatbots)
-    - [Interacting with other AWS AI Services](#interacting-with-other-aws-ai-services)
-  - [Building, Deploying and Publishing](#building-deploying-and-publishing)
-  - [Clean Up](#clean-up)
+- [Introduction](#introduction)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Backend Setup](#backend-setup)
+  - [Interacting with Chatbots](#interacting-with-chatbots)
+  - [Interacting with other AWS AI Services](#interacting-with-other-aws-ai-services)
+- [Building, Deploying and Publishing](#building-deploying-and-publishing)
+- [Clean Up](#clean-up)
 
 ## Introduction
 
@@ -28,9 +28,7 @@ This is a Starter React Progressive Web Application (PWA) that uses AWS AppSync 
 - Amazon Translate for language translation
 - Amazon S3 for Media Storage
 
- You can use this for learning purposes or adapt either the application or the GraphQL Schema to meet your needs.
-
-
+You can use this for learning purposes or adapt either the application or the GraphQL Schema to meet your needs.
 
 ## Getting Started
 
@@ -75,7 +73,7 @@ Note: This solution uses Amazon Lex. The service is only supported in us-east-1,
    echo $AWS_REGION
    ```
 
-    Make sure [**ALL**](https://docs.aws.amazon.com/general/latest/gr/rande.html) services are supported in this region or else you'll get errors in the next steps.
+   Make sure [**ALL**](https://docs.aws.amazon.com/general/latest/gr/rande.html) services are supported in this region or else you'll get errors in the next steps.
 
 4. Add an **Amazon Cognito User Pool** auth resource. Use the default configuration.
 
@@ -103,10 +101,11 @@ Note: This solution uses Amazon Lex. The service is only supported in us-east-1,
 
    Wait for the provisioning to complete. Once done, a `src/aws-exports.js` file with the resources information is created.
 
-___
+---
 
-***At this point you have an usable serverless chat application with no AI features. The next steps are only needed to deploy and configure the integration with services that provide image recognition, text-to-speech, language translation, sentiment analysis as well as conversational chatbots. From here you can skip to step 13 if there's no interest to setup the AI integration.***
-___
+**_At this point you have an usable serverless chat application with no AI features. The next steps are only needed to deploy and configure the integration with services that provide image recognition, text-to-speech, language translation, sentiment analysis as well as conversational chatbots. From here you can skip to step 13 if there's no interest to setup the AI integration._**
+
+---
 
 8. Look up the S3 bucket name created for user storage:
 
@@ -136,7 +135,6 @@ ___
     ```bash
     cd ./backend/chuckbot-lambda; npm install; cd ../..
     cd ./backend/moviebot-lambda; npm install; cd ../..
-    cd ./backend/ai-lambda; npm install; cd ../..
     sam package --template-file ./backend/deploy.yaml --s3-bucket $DEPLOYMENT_BUCKET_NAME --output-template-file packaged.yaml
     export STACK_NAME_AIML="$STACK_NAME-extra-aiml"
     sam deploy --template-file ./packaged.yaml --stack-name $STACK_NAME_AIML --capabilities CAPABILITY_IAM --parameter-overrides appSyncAPI=$GRAPHQL_API_ID s3Bucket=$USER_FILES_BUCKET --region $AWS_REGION
@@ -190,8 +188,8 @@ _The chatbots retrieve information online via API calls from Lambda to [The Movi
 
 1. In order to initiate or respond to a chatbot conversation, you need to start the message with either `@chuckbot` or `@moviebot` to trigger or respond to the specific bot, for example:
 
-   - *@chuckbot Give me a Chuck Norris fact*
-   - *@moviebot Tell me about a movie*
+   - _@chuckbot Give me a Chuck Norris fact_
+   - _@moviebot Tell me about a movie_
 
 2. Each subsequent response needs to start with the bot handle (@chuckbot or @moviebot) so the app can detect the message is directed to Lex and not to the other user in the same conversation. Both users will be able to view Lex chatbot responses in real-time powered by GraphQL subscriptions.
 3. Alternatively you can start a chatbot conversation from the message drop-down menu:
@@ -222,9 +220,16 @@ _The chatbots retrieve information online via API calls from Lambda to [The Movi
 
 ## Clean Up
 
-To clean up the project, you can simply delete the stack created by the SAM CLI:
+To clean up the project, you can simply delete the bots, delete the stack created by the SAM CLI:
 
 ```bash
+aws lex-models delete-bot --name `jq -r .name backend/ChuckBot/bot.json` --region $AWS_REGION
+aws lex-models delete-bot --name `jq -r .name backend/MovieBot/bot.json` --region $AWS_REGION
+aws lex-models delete-intent --name `jq -r .name backend/ChuckBot/intent.json` --region $AWS_REGION
+aws lex-models delete-intent --name `jq -r .name backend/MovieBot/intent.json` --region $AWS_REGION
+aws lex-models delete-slot-type --name `jq -r .name backend/ChuckBot/slot-type.json` --region $AWS_REGION
+aws lex-models delete-slot-type --name `jq -r .name backend/MovieBot/slot-type.json` --region $AWS_REGION
+
 aws cloudformation delete-stack --stack-name $STACK_NAME_AIML --region $AWS_REGION
 ```
 
