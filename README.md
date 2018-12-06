@@ -2,6 +2,7 @@
 
 ## Quicklinks
 
+- [re:Invent 2018 Presentation](https://www.youtube.com/watch?v=0H5F0PI2-SU)
 - [Introduction](#introduction)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
@@ -13,7 +14,7 @@
 
 ## Introduction
 
-This is a Starter React Progressive Web Application (PWA) that uses AWS AppSync to implement offline and real-time capabilities in a chat application with AI/ML features such as image recognition, text-to-speech, language translation, sentiment analysis as well as conversational chatbots. In the chat app, users can search for users and messages, have conversations with other users, upload images and exchange messages. The application demonstrates GraphQL Mutations, Queries and Subscriptions with AWS AppSync integrating with other AWS Services:
+This is a Starter React Progressive Web Application (PWA) that uses AWS AppSync to implement offline and real-time capabilities in a chat application with AI/ML features such as image recognition, text-to-speech, language translation, sentiment analysis as well as conversational chatbots developed as part of the re:Invent session [Bridging the Gap Between Real Time/Offline and AI/ML Capabilities in Modern Serverless Apps](https://www.youtube.com/watch?v=0H5F0PI2-SU). In the chat app, users can search for users and messages, have conversations with other users, upload images and exchange messages. The application demonstrates GraphQL Mutations, Queries and Subscriptions with AWS AppSync integrating with other AWS Services:
 
 ![ChatQL Overview](/media/ChatQLv2.png)
 
