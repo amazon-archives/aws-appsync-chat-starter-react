@@ -2,7 +2,7 @@
 
 ## Quicklinks
 
-- [re:Invent 2018 Presentation](https://www.youtube.com/watch?v=0H5F0PI2-SU)
+- re:Invent 2018 [Session](https://www.youtube.com/watch?v=0H5F0PI2-SU)/[Slides](https://www.slideshare.net/AmazonWebServices/bridging-the-gap-between-real-timeoffline-and-aiml-capabilities-in-modern-serverless-apps-mob310-aws-reinvent-2018)
 - [Introduction](#introduction)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
