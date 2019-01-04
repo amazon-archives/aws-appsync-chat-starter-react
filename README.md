@@ -6,11 +6,11 @@
 - [Introduction](#introduction)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
-  - [Backend Setup](#backend-setup)
+  - [Back End Setup](#back-end-setup)
   - [Interacting with Chatbots](#interacting-with-chatbots)
   - [Interacting with other AWS AI Services](#interacting-with-other-aws-ai-services)
 - [Building, Deploying and Publishing with the Amplify CLI](#building-deploying-and-publishing-with-the-amplify-cli)
-- [Backend Setup, Building, Deploying and Publishing with the Amplify Console](#backend-setup-building-deploying-and-publishing-with-the-amplify-console)
+- [Back End Setup, Back End/Front End Building, Deploying and Publishing with the Amplify Console](#back-end-setup-back-end-front-end-building-deploying-and-publishing-with-the-amplify-console)
 - [Clean Up](#clean-up)
 
 ## Introduction
@@ -45,7 +45,7 @@ You can use this for learning purposes or adapt either the application or the Gr
 - [Install JQ](https://stedolan.github.io/jq/)
 - If using Windows, you'll need the [Windows Subsystem for Linux (WSL)](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
 
-### Backend Setup
+### Back End Setup
 
 Note: This solution uses Amazon Lex. The service is only supported in us-east-1, us-west-2 and eu-west-1. We recommending launching this entire solution in one of these regions.
 
@@ -220,7 +220,7 @@ _The chatbots retrieve information online via API calls from Lambda to [The Movi
 
 4. Access your public ChatQL application using the S3 Website Endpoint URL or the CloudFront URL returned by the `amplify publish` command. Share the link with friends, sign up some users, and start creating conversations, uploading images, translating, executing text-to-speech in different languages, performing sentiment analysis and exchanging messages. Be mindful PWAs require SSL, in order to test PWA functionality access the CloudFront URL (HTTPS) from a mobile device and add the site to the mobile home screen.
 
-## Backend Setup, Building, Deploying and Publishing with the Amplify Console
+## Back End Setup, Back End/Front End Building, Deploying and Publishing with the Amplify Console
 
 1. Fork this repository into your own GitHub account and clone it
 2. Install the Amplify CLI with multienv support:
