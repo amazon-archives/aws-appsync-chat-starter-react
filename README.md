@@ -222,7 +222,7 @@ _The chatbots retrieve information online via API calls from Lambda to [The Movi
 
 ## Backend Setup, Building, Deploying and Publishing with the Amplify Console
 
-1. Fork this repository into your own GitHub account
+1. Fork this repository into your own GitHub account and clone it
 2. Install the Amplify CLI with multienv support:
 
     ```bash
