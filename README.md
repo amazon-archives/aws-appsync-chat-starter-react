@@ -221,20 +221,13 @@ _The chatbots retrieve information online via API calls from Lambda to [The Movi
 4. Access your public ChatQL application using the S3 Website Endpoint URL or the CloudFront URL returned by the `amplify publish` command. Share the link with friends, sign up some users, and start creating conversations, uploading images, translating, executing text-to-speech in different languages, performing sentiment analysis and exchanging messages. Be mindful PWAs require SSL, in order to test PWA functionality access the CloudFront URL (HTTPS) from a mobile device and add the site to the mobile home screen.
 
 ## Back End Setup, Back End and Front End Building, Deploying and Publishing with the Amplify Console
+(More info [here](https://docs.aws.amazon.com/amplify/latest/userguide/deploy-backend.html).)
 
 1. Fork this repository into your own GitHub account and clone it
-2. Install the Amplify CLI with multienv support:
-
-    ```bash
-    npm install -g @aws-amplify/cli@multienv
-    ```
-
-    More info [here](https://docs.aws.amazon.com/amplify/latest/userguide/deploy-backend.html).
-
-3. Repeat Steps 3 to 6 from the [Back End Setup](#back-end-setup) in the previous section. Do not perform step 7 (`amplify push`).
-4. Commit the changes to your forked repository. A new folder `amplify` will be commited with the project details.
-5. Connect your repository to the [Amplify Console](https://console.aws.amazon.com/amplify/home?#/create) as per the instructions [here](https://docs.aws.amazon.com/amplify/latest/userguide/getting-started.html), making sure the name of the branch in your repository matches the name of the environment configured on `amplify init` (i.e. master). When prompted with "_We detected a backend created with the Amplify Framework. Would you like Amplify Console to deploy these resources with your frontend?_", select **"YES"** and provide or create an IAM role with appropriate permissions to build the backend resources
-6. Wait for the build, deployment and verification steps
+2. Repeat Steps 3 to 6 from the [Back End Setup](#back-end-setup) in the previous section. Do not perform step 7 (`amplify push`).
+3. Commit the changes to your forked repository. A new folder `amplify` will be commited with the project details.
+4. Connect your repository to the [Amplify Console](https://console.aws.amazon.com/amplify/home?#/create) as per the instructions [here](https://docs.aws.amazon.com/amplify/latest/userguide/getting-started.html), making sure the name of the branch in your repository matches the name of the environment configured on `amplify init` (i.e. master). When prompted with "_We detected a backend created with the Amplify Framework. Would you like Amplify Console to deploy these resources with your frontend?_", select **"YES"** and provide or create an IAM role with appropriate permissions to build the backend resources
+5. Wait for the build, deployment and verification steps
 
 ---
 
