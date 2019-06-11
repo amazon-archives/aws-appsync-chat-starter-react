@@ -1,0 +1,68 @@
+{
+    "identityPoolName": "chatqlv2d29f4bfb_identitypool_d29f4bfb",
+    "allowUnauthenticatedIdentities": false,
+    "lambdaLogPolicy": "chatql_d29f4bfb_lambda_log_policy",
+    "openIdLambdaRoleName": "chatql_d29f4bfb_openid_lambda_role",
+    "openIdRolePolicy": "chatql_d29f4bfb_openid_pass_role_policy",
+    "openIdLambdaIAMPolicy": "chatql_d29f4bfb_openid_lambda_iam_policy",
+    "openIdLogPolicy": "chatql_d29f4bfb_openid_lambda_log_policy",
+    "userPoolName": "chatqlv2d29f4bfb_userpool_d29f4bfb",
+    "autoVerifiedAttributes": [
+        "email"
+    ],
+    "mfaConfiguration": "OFF",
+    "mfaTypes": [
+        "SMS Text Message"
+    ],
+    "roleName": "chatqld29f4bfb_sns-role",
+    "roleExternalId": "chatqld29f4bfb_role_external_id",
+    "policyName": "chatqld29f4bfb-sns-policy",
+    "smsAuthenticationMessage": "Your authentication code is {####}",
+    "smsVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "Your verification code",
+    "emailVerificationMessage": "Your verification code is {####}",
+    "defaultPasswordPolicy": false,
+    "passwordPolicyMinLength": 8,
+    "passwordPolicyCharacters": [],
+    "requiredAttributes": [
+        "email"
+    ],
+    "userpoolClientName": "chatqld29f4bfb_app_client",
+    "userpoolClientGenerateSecret": true,
+    "userpoolClientRefreshTokenValidity": 30,
+    "userpoolClientWriteAttributes": [
+        "email"
+    ],
+    "userpoolClientReadAttributes": [
+        "email"
+    ],
+    "mfaLambdaRole": "chatqld29f4bfb_totp_lambda_role",
+    "mfaLambdaLogPolicy": "chatqld29f4bfb_totp_lambda_log_policy",
+    "mfaPassRolePolicy": "chatqld29f4bfb_totp_pass_role_policy",
+    "mfaLambdaIAMPolicy": "chatqld29f4bfb_totp_lambda_iam_policy",
+    "userpoolClientLambdaRole": "chatqld29f4bfb_userpoolclient_lambda_role",
+    "userpoolClientLogPolicy": "chatqld29f4bfb_userpoolclient_lambda_log_policy",
+    "userpoolClientLambdaPolicy": "chatqld29f4bfb_userpoolclient_lambda_iam_policy",
+    "userpoolClientSetAttributes": false,
+    "resourceName": "chatqlv2d29f4bfb",
+    "authSelections": "identityPoolAndUserPool",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    },
+    "unauthRoleArn": {
+        "Fn::GetAtt": [
+            "UnauthRole",
+            "Arn"
+        ]
+    },
+    "useDefault": "default"
+}

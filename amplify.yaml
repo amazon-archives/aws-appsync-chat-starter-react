@@ -1,0 +1,49 @@
+version: 0.1
+backend:
+  phases:
+    build:
+      commands:
+        - "# Execute Amplify CLI with the helper script"
+        - amplifyPush --simple
+        - yum install jq python36 python36-devel python36-pip -y
+        - python3.6 -m pip install --upgrade pip
+        - USER_BASE_PATH=$(python3.6 -m site --user-base)
+        - export PATH=$PATH:$USER_BASE_PATH/bin
+        - python3.6 -m pip install aws-sam-cli
+        - export AWS_REGION=$(jq -r '.providers.awscloudformation.Region' amplify/#current-cloud-backend/amplify-meta.json)
+        - export USER_FILES_BUCKET=$(jq -r '.storage[(.storage | keys)[0]].output.BucketName' ./amplify/#current-cloud-backend/amplify-meta.json)
+        - export GRAPHQL_API_ID=$(jq -r '.api[(.api | keys)[0]].output.GraphQLAPIIdOutput' ./amplify/#current-cloud-backend/amplify-meta.json)
+        - export DEPLOYMENT_BUCKET_NAME=$(jq -r '.providers.awscloudformation.DeploymentBucketName' ./amplify/#current-cloud-backend/amplify-meta.json)
+        - export STACK_NAME=$(jq -r '.providers.awscloudformation.StackName' ./amplify/#current-cloud-backend/amplify-meta.json)
+        - cd ./backend/chuckbot-lambda; npm install; cd ../..
+        - cd ./backend/moviebot-lambda; npm install; cd ../..
+        - sam package --template-file ./backend/deploy.yaml --s3-bucket $DEPLOYMENT_BUCKET_NAME --output-template-file packaged.yaml
+        - export STACK_NAME_AIML="$STACK_NAME-extra-aiml"
+        - sam deploy --template-file ./packaged.yaml --stack-name $STACK_NAME_AIML --capabilities CAPABILITY_IAM --parameter-overrides appSyncAPI=$GRAPHQL_API_ID s3Bucket=$USER_FILES_BUCKET --region $AWS_REGION
+        - export CHUCKBOT_FUNCTION_ARN=$(aws cloudformation describe-stacks --stack-name  $STACK_NAME_AIML --query "Stacks[0].Outputs" --region $AWS_REGION --output json | jq -r '.[] | select(.OutputKey == "ChuckBotFunction") | .OutputValue')
+        - export MOVIEBOT_FUNCTION_ARN=$(aws cloudformation describe-stacks --stack-name  $STACK_NAME_AIML --query "Stacks[0].Outputs" --region $AWS_REGION --output json | jq -r '.[] | select(.OutputKey == "MovieBotFunction") | .OutputValue')
+        - aws lambda add-permission --statement-id Lex --function-name $CHUCKBOT_FUNCTION_ARN --action lambda:\* --principal lex.amazonaws.com --region $AWS_REGION
+        - aws lambda add-permission --statement-id Lex --function-name $MOVIEBOT_FUNCTION_ARN --action lambda:\* --principa
+        - jq '.fulfillmentActivity.codeHook.uri = $arn' --arg arn $CHUCKBOT_FUNCTION_ARN backend/ChuckBot/intent.json -M > tmp.txt ; cp tmp.txt backend/ChuckBot/intent.json; rm tmp.txt
+        - jq '.fulfillmentActivity.codeHook.uri = $arn' --arg arn $MOVIEBOT_FUNCTION_ARN backend/MovieBot/intent.json -M > tmp.txt ; cp tmp.txt backend/MovieBot/intent.json; rm tmp.txt
+        - aws lex-models put-slot-type --cli-input-json file://backend/ChuckBot/slot-type.json --region $AWS_REGION
+        - aws lex-models put-intent --cli-input-json file://backend/ChuckBot/intent.json --region $AWS_REGION
+        - aws lex-models put-bot --cli-input-json file://backend/ChuckBot/bot.json --region $AWS_REGION
+        - aws lex-models put-slot-type --cli-input-json file://backend/MovieBot/slot-type.json --region $AWS_REGION
+        - aws lex-models put-intent --cli-input-json file://backend/MovieBot/intent.json --region $AWS_REGION
+        - aws lex-models put-bot --cli-input-json file://backend/MovieBot/bot.json --region $AWS_REGION
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - yarn install
+    build:
+      commands:
+        - yarn run build
+  artifacts:
+    baseDirectory: build
+    files:
+      - "**/*"
+  cache:
+    paths:
+      - node_modules/**/*
