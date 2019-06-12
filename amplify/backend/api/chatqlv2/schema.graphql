@@ -1,0 +1,99 @@
+type Conversation
+  @model(
+    mutations: { create: "createConvo" }
+    queries: { get: "getConvo" }
+    subscriptions: null
+  ) {
+  id: ID!
+  name: String!
+  createdAt: String
+  # Messages in this conversation
+  messages: [Message] @connection(name: "ConvoMsgs", sortField: "createdAt")
+  associated: [ConvoLink] @connection(name: "associatedLinks")
+}
+
+type Message
+  @searchable
+  @auth(rules: [{ allow: owner, identityField: "sub", mutations: [create] }])
+  @model(
+    mutations: { create: "createMessage" }
+    queries: null
+    subscriptions: null
+  ) {
+  id: ID!
+  content: String
+  createdAt: String
+  owner: String
+  chatbot: Boolean
+  # Flag denoting if this message has been accepted by the server or not.
+  isSent: Boolean
+  file: S3Object
+  messageConversationId: ID
+  # The conversation this message belongs to
+  conversation: Conversation @connection(name: "ConvoMsgs")
+}
+
+type S3Object {
+  bucket: String!
+  region: String!
+  key: String!
+}
+
+type User
+  @searchable
+  @auth(rules: [{ allow: owner, identityField: "sub" }])
+  @model(
+    mutations: { create: "registerUser" }
+    queries: { get: "getUser" }
+    subscriptions: null
+  ) {
+  id: ID!
+  username: String!
+  # is the user registered?
+  registered: Boolean
+  # the user's conversations
+  userConversations: [ConvoLink] @connection(name: "UserLinks")
+}
+
+type ConvoLink
+  @searchable
+  @model(
+    mutations: { create: "createConvoLink", update: "updateConvoLink" }
+    queries: null
+    subscriptions: null
+  ) {
+  id: ID!
+  name: String
+  status: String
+  convoLinkUserId: ID
+  user: User @connection(name: "UserLinks")
+  conversation: Conversation @connection(name: "associatedLinks")
+}
+
+type AI {
+  bucket: String
+  key: String
+  bot: String
+  text: String
+  language: String
+  voice: String
+  response: AWSJSON
+}
+
+type Subscription {
+  onCreateMessage(messageConversationId: ID!): Message
+    @aws_subscribe(mutations: ["createMessage"])
+  onUpdateConvoLink(convoLinkUserId: ID, status: String): ConvoLink
+    @aws_subscribe(mutations: ["updateConvoLink"])
+}
+
+type Query {
+  detectCelebs(bucket: String, key: String): AI
+  detectLabels(bucket: String, key: String): AI
+  detectLanguage(text: String): AI
+  detectEntities(language: String, text: String): AI
+  detectSentiment(language: String, text: String): AI
+  invokeBot(bot: String, text: String): AI
+  dictate(bucket: String, key: String, voice: String, text: String): AI
+  translate(language: String, text: String): AI
+}

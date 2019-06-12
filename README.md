@@ -5,13 +5,14 @@
 - re:Invent 2018 [Session](https://www.youtube.com/watch?v=0H5F0PI2-SU)/[Slides](https://www.slideshare.net/AmazonWebServices/bridging-the-gap-between-real-timeoffline-and-aiml-capabilities-in-modern-serverless-apps-mob310-aws-reinvent-2018)
 - [Introduction](#introduction)
 - [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
+  - [One-Click Deploy with the Amplify Console](#one-click-deploy-with-the-amplify-console)
+  - [Manual Setup - Prerequisites](#manual-setup-prerequisites)
   - [Back End Setup](#back-end-setup)
   - [Interacting with Chatbots](#interacting-with-chatbots)
   - [Interacting with other AWS AI Services](#interacting-with-other-aws-ai-services)
 - [Building, Deploying and Publishing with the Amplify CLI](#building-deploying-and-publishing-with-the-amplify-cli)
-- [Back End Setup, Back End and Front End Building, Deploying and Publishing with the Amplify Console](#back-end-setup-back-end-and-front-end-building-deploying-and-publishing-with-the-amplify-console)
 - [Clean Up](#clean-up)
+- [ChatQL v1](https://github.com/aws-samples/aws-mobile-appsync-chat-starter-angular)
 
 ## Introduction
 
@@ -34,7 +35,17 @@ You can use this for learning purposes or adapt either the application or the Gr
 
 ## Getting Started
 
-### Prerequisites
+### One-Click Deploy with the Amplify Console
+
+Click the button to load the AWS Amplify Console, connect to GitHub and provide an IAM role for the build. The end to end back-end and front-end deployment with all services should take around 15 minutes:
+
+<p align="center">
+    <a href="https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/aws-samples/aws-appsync-chat-starter-react">
+        <img src="https://oneclick.amplifyapp.com/button.svg" alt="Deploy to Amplify Console">
+    </a>
+</p>
+
+### Manual Setup - Prerequisites
 
 - [AWS Account](https://aws.amazon.com/mobile/details) with appropriate permissions to create the related resources
 - [NodeJS](https://nodejs.org/en/download/) with [NPM](https://docs.npmjs.com/getting-started/installing-node)
@@ -47,7 +58,7 @@ You can use this for learning purposes or adapt either the application or the Gr
 
 ### Back End Setup
 
-Note: This solution uses Amazon Lex. The service is only supported in us-east-1, us-west-2 and eu-west-1. We recommending launching this entire solution in one of these regions.
+Note: This solution uses Amazon Lex. The service is only supported in us-east-1, us-west-2, ap-southeast-2 and eu-west-1. We recommending launching this entire solution in one of these regions.
 
 1. First, clone this repository and navigate to the created folder:
 
@@ -219,25 +230,6 @@ _The chatbots retrieve information online via API calls from Lambda to [The Movi
 3. If you are deploying a CloudFront distribution, be mindful it needs to be replicated across all points of presence globally and it might take up to 15 minutes to do so.
 
 4. Access your public ChatQL application using the S3 Website Endpoint URL or the CloudFront URL returned by the `amplify publish` command. Share the link with friends, sign up some users, and start creating conversations, uploading images, translating, executing text-to-speech in different languages, performing sentiment analysis and exchanging messages. Be mindful PWAs require SSL, in order to test PWA functionality access the CloudFront URL (HTTPS) from a mobile device and add the site to the mobile home screen.
-
-## Back End Setup, Back End and Front End Building, Deploying and Publishing with the Amplify Console
-
-(More info [here](https://docs.aws.amazon.com/amplify/latest/userguide/deploy-backend.html))
-
-1. Fork this repository into your own GitHub account and clone it
-2. Repeat Steps 3 to 6 from the [Back End Setup](#back-end-setup) in the previous section. Do not perform step 7 (`amplify push`).
-3. Commit the changes to your forked repository. A new folder `amplify` will be commited with the project details.
-4. Connect your repository to the [Amplify Console](https://console.aws.amazon.com/amplify/home?#/create) as per the instructions [here](https://docs.aws.amazon.com/amplify/latest/userguide/getting-started.html), making sure the name of the branch in your repository matches the name of the environment configured on `amplify init` (i.e. master). When prompted with "_We detected a backend created with the Amplify Framework. Would you like Amplify Console to deploy these resources with your frontend?_", select **"YES"** and provide or create an IAM role with appropriate permissions to build the backend resources
-5. Wait for the build, deployment and verification steps
-
----
-
-**_At this point you have an usable serverless chat application with no AI features. The next steps are only needed to deploy and configure the integration with services that provide image recognition, text-to-speech, language translation, sentiment analysis as well as conversational chatbots. From here you can skip to step 8 if there's no interest to setup the AI integration._**
-
----
-
-7. Now perform steps 7 to 12 from the [Back End Setup](#back-end-setup)
-8. Access your app from the hosted site generated by the Amplify Console(https://master.xxxxxxxx.amplifyapp.com)
 
 ## Clean Up
 

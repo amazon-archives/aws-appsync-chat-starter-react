@@ -1,0 +1,23 @@
+{
+	"auth": {
+		"chatqlv2d29f4bfb": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation"
+		}
+	},
+	"api": {
+		"chatqlv2": {
+			"service": "AppSync",
+			"providerPlugin": "awscloudformation",
+			"output": {
+				"securityType": "AMAZON_COGNITO_USER_POOLS"
+			}
+		}
+	},
+	"storage": {
+		"s36f331b8b": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation"
+		}
+	}
+}
