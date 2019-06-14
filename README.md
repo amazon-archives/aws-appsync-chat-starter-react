@@ -37,10 +37,10 @@ You can use this for learning purposes or adapt either the application or the Gr
 
 ### One-Click Deploy with the Amplify Console
 
-Click the button to load the AWS Amplify Console, connect to GitHub and provide an IAM role for the build. The end to end back-end and front-end deployment with all services should take around 15 minutes:
+Click the button to load the AWS Amplify Console, connect to GitHub and provide an IAM role for the build. The end to end back-end and front-end deployment should take around 20 minutes due to the amount of services being deployed and configured:
 
 <p align="center">
-    <a href="https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/aws-samples/aws-appsync-chat-starter-react">
+    <a href="https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/aws-samples/aws-appsync-chat-starter-react" target="_blank">
         <img src="https://oneclick.amplifyapp.com/button.svg" alt="Deploy to Amplify Console">
     </a>
 </p>
